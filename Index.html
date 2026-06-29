@@ -1,0 +1,2927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SARA AI — Scam Intelligence Platform</title>
+  <style>
+/* 
+   SARA AI PLATFORM — Main Stylesheet
+   Faithful conversion of React JSX inline styles → CSS classes
+    */
+
+/*  Reset & Base  */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --teal:      #0d9488;
+  --teal-l:    #5eead4;
+  --teal-d:    #0f766e;
+  --blue:      #3b82f6;
+  --purple:    #8b5cf6;
+  --amber:     #f59e0b;
+  --red:       #ef4444;
+  --green:     #22c55e;
+  --orange:    #f97316;
+  --s50:       #0f172a;
+  --s100:      #1e293b;
+  --s200:      #334155;
+  --s300:      #475569;
+  --s400:      #64748b;
+  --s500:      #94a3b8;
+  --s600:      #cbd5e1;
+  --s700:      #e2e8f0;
+  --s800:      #f1f5f9;
+  --s900:      #f8fafc;
+  --s950:      #ffffff;
+}
+
+html, body { height: 100%; }
+
+body {
+  background: var(--s950);
+  color: var(--s100);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+input, select, textarea {
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--s100);
+  background: var(--s800);
+  border: 1px solid var(--s700);
+  border-radius: 8px;
+  padding: 8px 12px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--teal); }
+select option { background: var(--s800); }
+textarea { resize: vertical; }
+
+/*  Scrollbar  */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--s300); }
+::-webkit-scrollbar-thumb { background: var(--s500); border-radius: 3px; }
+
+/*  Animations  */
+@keyframes pulse-dot {
+  0%   { box-shadow: 0 0 0 0 currentColor; }
+  70%  { box-shadow: 0 0 0 6px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+@keyframes bounce {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-6px); }
+}
+@keyframes wave {
+  0%   { transform: scaleY(1); }
+  100% { transform: scaleY(0.3); }
+}
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 
+   LAYOUT
+    */
+#app {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--s950);
+}
+
+/*  Sidebar  */
+.sidebar {
+  width: 220px;
+  background: var(--s900);
+  border-right: 1px solid var(--s800);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: width 0.2s ease;
+  overflow: hidden;
+}
+.sidebar.collapsed { width: 60px; }
+.sidebar.collapsed .logo-text,
+.sidebar.collapsed .live-indicator .live-count,
+.sidebar.collapsed .nav-label,
+.sidebar.collapsed .sidebar-footer { display: none; }
+.sidebar.collapsed .live-indicator { justify-content: center; margin: 12px 8px 0; padding: 8px; }
+.sidebar.collapsed .nav-item { justify-content: center; }
+.sidebar.collapsed .nav-icon { margin: 0; }
+
+.sidebar-logo {
+  padding: 20px 16px;
+  border-bottom: 1px solid var(--s800);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--s100);
+}
+.logo-name { font-weight: 800; font-size: 15px; color: var(--teal); letter-spacing: 0.5px; }
+.logo-sub  { font-size: 9px; color: var(--s500); letter-spacing: 2px; text-transform: uppercase; }
+.logo-text { animation: slide-in 0.2s ease; }
+
+.sidebar-toggle {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--s500);
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+.sidebar-toggle:hover { color: var(--s300); }
+
+.live-indicator {
+  margin: 12px 12px 0;
+  background: #22c55e11;
+  border: 1px solid #22c55e33;
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.live-count { font-size: 11px; color: var(--green); font-family: monospace; }
+
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow-y: auto;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  border-left: 3px solid transparent;
+  background: transparent;
+  color: var(--s400);
+  text-align: left;
+  width: 100%;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.nav-item:hover { background: rgba(13,148,136,0.08); color: var(--s200); }
+.nav-item.active {
+  background: rgba(13,148,136,0.12);
+  color: var(--teal);
+  border-left-color: var(--teal);
+}
+.nav-icon { width: 17px; height: 17px; flex-shrink: 0; }
+.nav-label { font-size: 13px; font-weight: 600; animation: slide-in 0.2s ease; }
+
+.sidebar-footer {
+  padding: 12px;
+  border-top: 1px solid var(--s800);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.footer-stat {
+  font-size: 10px;
+  color: var(--s500);
+  display: flex;
+  justify-content: space-between;
+}
+.footer-stat .val { color: var(--s400); }
+.footer-stat .val.green { color: var(--green); }
+.footer-stat .val.teal { color: var(--teal); }
+
+/*  Main Area  */
+.main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/*  Top Bar  */
+.topbar {
+  height: 56px;
+  background: var(--s900);
+  border-bottom: 1px solid var(--s800);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  flex-shrink: 0;
+}
+.topbar-left { display: flex; align-items: center; gap: 12px; }
+.page-title  { font-size: 16px; font-weight: 700; color: var(--s100); display: flex; align-items: center; gap: 8px; text-transform: capitalize; }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.status-pills { display: flex; gap: 6px; }
+.status-pill  {
+  font-size: 11px;
+  color: var(--s500);
+  font-family: monospace;
+  background: var(--s800);
+  border: 1px solid var(--s700);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.divider { width: 1px; height: 20px; background: var(--s700); }
+.user-info { display: flex; align-items: center; gap: 6px; }
+.user-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--s100);
+}
+.user-email { font-size: 12px; color: var(--s400); }
+
+/*  Content  */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  animation: fade-in 0.25s ease;
+}
+
+/* 
+   COMPONENTS
+    */
+
+/*  Badge  */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  font-family: monospace;
+  white-space: nowrap;
+  border: 1px solid;
+}
+.badge-sm { font-size: 10px; padding: 1px 6px; }
+.badge-teal   { background: rgba(13,148,136,.13); border-color: rgba(13,148,136,.27); color: var(--teal); }
+.badge-green  { background: rgba(34,197,94,.13); border-color: rgba(34,197,94,.27); color: var(--green); }
+.badge-red    { background: rgba(239,68,68,.13); border-color: rgba(239,68,68,.27); color: var(--red); }
+.badge-amber  { background: rgba(245,158,11,.13); border-color: rgba(245,158,11,.27); color: var(--amber); }
+.badge-blue   { background: rgba(59,130,246,.13); border-color: rgba(59,130,246,.27); color: var(--blue); }
+.badge-purple { background: rgba(139,92,246,.13); border-color: rgba(139,92,246,.27); color: var(--purple); }
+.badge-slate  { background: rgba(100,116,139,.13); border-color: rgba(100,116,139,.27); color: var(--s400); }
+
+/*  Pulse Dot  */
+.pulse-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.pulse-dot.green  { background: var(--green);  color: var(--green);  animation: pulse-dot 1.5s infinite; }
+.pulse-dot.red    { background: var(--red);    color: var(--red);    animation: pulse-dot 1.5s infinite; }
+.pulse-dot.slate  { background: var(--s600); }
+.pulse-dot.teal   { background: var(--teal);  color: var(--teal);   animation: pulse-dot 1.5s infinite; }
+
+/*  Card  */
+.card {
+  background: var(--s900);
+  border: 1px solid var(--s800);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.08);
+  transition: box-shadow 0.3s;
+}
+.card.glow { box-shadow: 0 0 20px rgba(13,148,136,.13); }
+
+/*  Threat Bar  */
+.threat-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--s800);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.threat-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+/*  Section Title  */
+.section-title { margin-bottom: 16px; }
+.section-title-row { display: flex; align-items: center; gap: 10px; }
+.section-title-row h2 { font-size: 16px; font-weight: 700; color: var(--s100); margin: 0; letter-spacing: 0.5px; }
+.section-icon { width: 18px; height: 18px; flex-shrink: 0; }
+.section-sub  { font-size: 12px; color: var(--s500); margin-top: 4px; margin-left: 28px; }
+
+/*  Stat Card  */
+.stat-card { flex: 1; min-width: 140px; }
+.stat-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.stat-icon { width: 20px; height: 20px; }
+.stat-label {
+  font-size: 11px;
+  color: var(--s400);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: monospace;
+}
+.stat-value { font-size: 28px; font-weight: 800; font-family: monospace; line-height: 1; }
+.stat-delta { font-size: 11px; margin-top: 6px; }
+
+/*  Waveform  */
+.waveform {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 30px;
+  margin-bottom: 12px;
+}
+.wave-bar {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--teal);
+  height: 4px;
+  transition: height 0.15s;
+}
+.wave-bar.active { animation: wave 0.5s ease-in-out infinite alternate; }
+
+/*  Buttons  */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-teal { background: var(--teal); color: var(--s100); }
+.btn-teal:hover { background: var(--teal-d); }
+.btn-red { background: var(--red); color: var(--s100); }
+.btn-red:hover { background: #dc2626; }
+.btn-ghost {
+  background: var(--s800);
+  border: 1px solid var(--s700);
+  color: var(--s400);
+}
+.btn-ghost:hover { border-color: var(--s600); color: var(--s200); }
+.w-full { width: 100%; justify-content: center; }
+
+/*  Analytics Tabs  */
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  background: var(--s900);
+  border: 1px solid var(--s800);
+  border-radius: 10px;
+  padding: 4px;
+  width: fit-content;
+  margin-bottom: 0;
+}
+.tab-btn {
+  padding: 6px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  background: transparent;
+  color: var(--s400);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn.active { background: var(--teal); color: var(--s100); }
+.tab-btn:hover:not(.active) { color: var(--s200); }
+
+/*  Table  */
+.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.data-table th {
+  padding: 8px 12px;
+  color: var(--s400);
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--s700);
+}
+.data-table td { padding: 8px 12px; border-bottom: 1px solid var(--s800); }
+.data-table tbody tr:hover { background: rgba(0,0,0,.03); }
+
+/*  Grid helpers  */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; }
+.grid-sessions { display: grid; grid-template-columns: repeat(auto-fill,minmax(320px,1fr)); gap: 14px; }
+.flex-col { display: flex; flex-direction: column; gap: 16px; }
+.flex-row { display: flex; gap: 12px; }
+.mt-12 { margin-top: 12px; }
+
+/*  Chat Panel  */
+.chat-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chat-header-left { display: flex; align-items: center; gap: 10px; }
+.chat-header-right { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.chat-title { font-size: 13px; font-weight: 700; color: var(--s100); }
+.speaking-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(13,148,136,.13);
+  border: 1px solid rgba(13,148,136,.27);
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 10px;
+  color: var(--teal);
+  font-family: monospace;
+}
+.speaking-icon { display: inline-flex; align-items: center; }
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 0;
+  padding-right: 4px;
+}
+.msg-wrap-sara   { display: flex; justify-content: flex-start; }
+.msg-wrap-scammer { display: flex; justify-content: flex-end; }
+
+.msg-bubble {
+  max-width: 80%;
+  padding: 10px 14px;
+}
+.msg-bubble.sara {
+  background: var(--s800);
+  border: 1px solid var(--s700);
+  border-radius: 4px 16px 16px 16px;
+}
+.msg-bubble.scammer {
+  background: rgba(239,68,68,.09);
+  border: 1px solid rgba(239,68,68,.19);
+  border-radius: 16px 4px 16px 16px;
+}
+.msg-role {
+  font-size: 10px;
+  margin-bottom: 4px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.msg-role.sara    { color: var(--teal); }
+.msg-role.scammer { color: var(--red); }
+.msg-text { font-size: 13px; color: var(--s200); margin: 0; line-height: 1.6; }
+.msg-entities { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+
+.thinking-bubble {
+  background: var(--s800);
+  border: 1px solid var(--s700);
+  border-radius: 4px 16px 16px 16px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.thinking-dots { display: flex; align-items: center; gap: 4px; }
+.thinking-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+.thinking-dot:nth-child(1) { animation: bounce 0.6s 0s infinite alternate; }
+.thinking-dot:nth-child(2) { animation: bounce 0.6s 0.15s infinite alternate; }
+.thinking-dot:nth-child(3) { animation: bounce 0.6s 0.3s infinite alternate; }
+.thinking-label { font-size: 11px; color: var(--s400); font-family: monospace; margin-left: 8px; }
+
+.chat-input-area {
+  border-top: 1px solid var(--s800);
+  padding-top: 14px;
+  margin-top: 12px;
+}
+.analyst-label { font-size: 11px; color: var(--s500); margin-bottom: 8px; font-family: monospace; }
+.input-row { display: flex; gap: 8px; }
+.stt-btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--s700);
+  background: var(--s800);
+  color: var(--s400);
+  font-size: 14px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+.stt-btn.active { border-color: var(--red); background: rgba(239,68,68,.13); color: var(--red); }
+.chat-input {
+  flex: 1;
+  background: var(--s800);
+  border: 1px solid var(--s700);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--s100);
+  font-size: 13px;
+  outline: none;
+  width: auto;
+}
+.chat-input:focus { border-color: var(--teal); }
+.chat-footer-info {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.chat-footer-info span { font-size: 10px; color: var(--s500); }
+.chat-footer-info .sep { color: var(--s700); }
+
+/*  Session Card  */
+.session-card { cursor: pointer; }
+.session-card.selected { border: 2px solid var(--teal) !important; }
+.session-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.session-id  { font-family: monospace; font-size: 13px; font-weight: 700; color: var(--teal); }
+.session-num { font-size: 11px; color: var(--s400); }
+.session-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.session-threat-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.session-threat-label { font-size: 11px; color: var(--s400); }
+.session-meta { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size: 11px; color: var(--s400); margin-top: 8px; }
+.report-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 6px 0;
+  background: rgba(239,68,68,.13);
+  border: 1px solid rgba(239,68,68,.27);
+  border-radius: 6px;
+  color: var(--red);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.15s;
+}
+.report-btn:hover { background: rgba(239,68,68,.2); }
+
+/*  Intelligence Feed  */
+.intel-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--s800);
+  border-radius: 8px;
+  border: 1px solid var(--s700);
+}
+.intel-item.critical { border-color: rgba(239,68,68,.27); }
+.intel-value { font-size: 12px; font-family: monospace; color: var(--s200); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.intel-meta  { font-size: 10px; color: var(--s500); }
+.intel-conf  { font-size: 11px; font-family: monospace; color: var(--green); flex-shrink: 0; }
+
+/*  Intelligence stat mini cards  */
+.intel-mini { text-align: center; padding: 14px; }
+.intel-mini-icon { font-size: 22px; margin-bottom: 4px; }
+.intel-mini-count { font-size: 22px; font-weight: 800; font-family: monospace; }
+.intel-mini-label { font-size: 10px; color: var(--s400); }
+
+/*  Memory  */
+.pattern-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--s800);
+}
+.pattern-row:last-child { border-bottom: none; }
+.pattern-id   { border-radius: 6px; padding: 2px 8px; font-size: 10px; font-family: monospace; flex-shrink: 0; }
+.pattern-name { font-size: 13px; font-weight: 600; color: var(--s200); }
+.pattern-meta { font-size: 11px; color: var(--s500); }
+.pattern-conf { color: var(--teal); font-family: monospace; font-size: 13px; font-weight: 700; margin-left: auto; flex-shrink: 0; }
+.conf-bar     { width: 80px; margin-left: 8px; }
+
+.embedding-box {
+  background: var(--s800);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.embed-label { font-size: 11px; color: var(--s400); margin-bottom: 4px; }
+.embed-val   { font-size: 10px; font-family: monospace; color: var(--teal); word-break: break-all; opacity: 0.7; }
+
+.similarity-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--s800);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+}
+.sim-label { font-size: 10px; font-family: monospace; color: var(--s400); flex: 1; }
+.sim-score { font-size: 11px; color: var(--green); font-family: monospace; }
+.sim-bar   { width: 50px; height: 4px; background: var(--s700); border-radius: 2px; overflow: hidden; }
+.sim-fill  { height: 100%; background: var(--green); border-radius: 2px; }
+
+.cache-info {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(13,148,136,.07);
+  border: 1px solid rgba(13,148,136,.2);
+  border-radius: 8px;
+  font-size: 11px;
+  color: var(--teal);
+  line-height: 1.8;
+}
+
+/*  Cybercrime portal cards  */
+.portal-card { padding: 20px; }
+.portal-card-icon { font-size: 28px; }
+.portal-card-name { font-weight: 700; font-size: 14px; color: var(--s100); }
+.portal-card-desc { font-size: 11px; color: var(--s500); }
+.portal-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.portal-visit {
+  display: block;
+  text-align: center;
+  padding: 8px 0;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none;
+  border: 1px solid;
+  transition: opacity 0.15s;
+}
+.portal-visit:hover { opacity: 0.8; }
+
+.session-report-btn {
+  background: rgba(239,68,68,.09);
+  border: 1px solid rgba(239,68,68,.27);
+  border-radius: 8px;
+  padding: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+.session-report-btn:hover { background: rgba(239,68,68,.15); }
+.session-report-id   { font-family: monospace; font-size: 12px; color: var(--teal); font-weight: 700; }
+.session-report-type { font-size: 11px; color: var(--s400); }
+.session-report-ent  { font-size: 11px; color: var(--s500); }
+.session-report-cta  { margin-top: 8px; font-size: 12px; color: var(--red); font-weight: 600; }
+
+/*  Settings  */
+.settings-label { font-size: 11px; color: var(--s400); display: block; margin-bottom: 4px; }
+.settings-group { margin-bottom: 12px; }
+.settings-card-title { font-size: 14px; font-weight: 700; color: var(--s100); margin-bottom: 16px; }
+.settings-save {
+  margin-top: 14px;
+  width: 100%;
+  padding: 8px 0;
+  background: var(--teal);
+  border: none;
+  border-radius: 8px;
+  color: var(--s100);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.15s;
+}
+.settings-save:hover { background: var(--teal-d); }
+
+/*  CascadeFlow Tree  */
+.cascade-tree { display: flex; flex-direction: column; align-items: center; padding: 20px; gap: 0; }
+.cascade-node {
+  padding: 8px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+.cascade-line { width: 2px; height: 20px; background: var(--s700); }
+.cascade-split { display: flex; gap: 40px; align-items: flex-start; }
+.cascade-split-branch { display: flex; flex-direction: column; align-items: center; }
+.cascade-leaf {
+  font-size: 10px;
+  border-radius: 6px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+
+/*  Chart containers  */
+.chart-container { position: relative; }
+
+/*  Modal  */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-box {
+  background: var(--s900);
+  border: 1px solid var(--s800);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--s800);
+  border: none;
+  color: var(--s400);
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s;
+}
+.modal-close:hover { color: var(--s100); }
+.modal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.modal-title  { font-size: 18px; font-weight: 800; color: var(--red); margin: 0; }
+.modal-sub    { font-size: 12px; color: var(--s400); margin: 0; }
+
+.modal-steps { display: flex; gap: 8px; margin-bottom: 24px; }
+.step { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.step-num {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--s800);
+  border: 2px solid var(--s700);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--s400);
+  transition: all 0.3s;
+}
+.step.active .step-num { background: var(--teal); border-color: var(--teal); color: var(--s100); }
+.step.done .step-num   { background: var(--green); border-color: var(--green); color: var(--s100); }
+.step span             { font-size: 10px; color: var(--s500); }
+.step.active span      { color: var(--teal); }
+
+.step-intro { font-size: 13px; color: var(--s300); margin-bottom: 16px; }
+.evidence-list { background: var(--s800); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+.evidence-item { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--s700); align-items: center; }
+.evidence-item:last-child { border-bottom: none; }
+.evidence-left { display: flex; gap: 8px; align-items: center; }
+.evidence-val  { font-size: 12px; font-family: monospace; color: var(--s200); }
+.evidence-conf { font-size: 11px; color: var(--green); }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 0; }
+.form-group { display: flex; flex-direction: column; }
+.form-group label { font-size: 11px; color: var(--s400); margin-bottom: 4px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 0; }
+
+.success-screen { text-align: center; padding: 20px 0; }
+.success-screen svg { margin-bottom: 16px; }
+.success-title { color: var(--green); font-size: 20px; margin-bottom: 8px; }
+.success-sub   { color: var(--s400); font-size: 13px; margin-bottom: 20px; }
+.success-details {
+  background: var(--s800);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: left;
+  margin-bottom: 20px;
+}
+.success-details p { font-size: 12px; color: var(--s400); margin: 4px 0; }
+.portal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+.portal-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--s800);
+  border: 1px solid var(--s700);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--teal);
+  font-size: 12px;
+  font-weight: 600;
+  transition: background 0.15s;
+}
+.portal-link:hover { background: var(--s700); }
+
+/*  Utility classes  */
+.mono   { font-family: monospace; }
+.teal   { color: var(--teal); }
+.green  { color: var(--green); }
+.red    { color: var(--red); }
+.amber  { color: var(--amber); }
+.blue   { color: var(--blue); }
+.purple { color: var(--purple); }
+.s400   { color: var(--s400); }
+.s500   { color: var(--s500); }
+.overflowx { overflow-x: auto; }
+
+/*  Dashboard layout  */
+.dashboard-main { display: grid; grid-template-columns: 1fr 400px; gap: 16px; min-height: 500px; }
+.intel-panel { display: flex; flex-direction: column; gap: 12px; }
+
+/*  Report Cybercrime card  */
+.report-card-btn {
+  width: 100%;
+  padding: 10px 0;
+  background: linear-gradient(135deg, var(--red), #b91c1c);
+  border: none;
+  border-radius: 8px;
+  color: var(--s100);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 13px;
+  box-shadow: 0 4px 12px rgba(239,68,68,.27);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+.report-card-btn:hover { box-shadow: 0 4px 20px rgba(239,68,68,.4); }
+.portal-quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
+.portal-quick {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--s800);
+  border: 1px solid var(--s700);
+  border-radius: 6px;
+  padding: 6px 8px;
+  color: var(--s300);
+  font-size: 11px;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.portal-quick:hover { background: var(--s700); }
+</style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+<base target="_blank">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!--  APP SHELL                                                             -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          <path d="M11 8v6M8 11h6"/>
+        </svg>
+      </div>
+      <div class="logo-text" id="logoText">
+        <div class="logo-name">SARA AI</div>
+        <div class="logo-sub">Scam Intelligence</div>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar">
+        <svg id="toggleIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="live-indicator" id="liveIndicator">
+      <span class="pulse-dot green"></span>
+      <span class="live-count" id="sidebarLiveCount">4 Active Sessions</span>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebarNav">
+      <button class="nav-item active" data-page="dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        <span class="nav-label">Dashboard</span>
+      </button>
+      <button class="nav-item" data-page="sessions">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.5 9.93a19.79 19.79 0 01-3-8.59A2 2 0 013.48 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.91 8.91a16 16 0 006.29 6.29l1.28-1.28a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+        </svg>
+        <span class="nav-label">Live Sessions</span>
+      </button>
+      <button class="nav-item" data-page="intelligence">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+        </svg>
+        <span class="nav-label">Intelligence</span>
+      </button>
+      <button class="nav-item" data-page="memory">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2a10 10 0 0110 10c0 5.52-4.48 10-10 10S2 17.52 2 12"/><path d="M12 6v6l4 2"/>
+        </svg>
+        <span class="nav-label">Memory</span>
+      </button>
+      <button class="nav-item" data-page="analytics">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+          <line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>
+        </svg>
+        <span class="nav-label">Analytics</span>
+      </button>
+      <button class="nav-item" data-page="cybercrime">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span class="nav-label">Report Crime</span>
+      </button>
+      <button class="nav-item" data-page="settings">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+        </svg>
+        <span class="nav-label">Settings</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer" id="sidebarFooter">
+      <div class="footer-stat"><span>Uptime</span><span class="val green">99.97%</span></div>
+      <div class="footer-stat"><span>Cost Today</span><span class="val teal">&#8377;4.23</span></div>
+      <div class="footer-stat"><span>Version</span><span class="val">v2.4.1</span></div>
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <div class="main-area">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 class="page-title" id="pageTitle">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+          Dashboard
+        </h1>
+        <span class="badge badge-teal">LIVE</span>
+      </div>
+      <div class="topbar-right">
+        <div class="status-pills">
+          <span class="status-pill">Claude API</span>
+          <span class="status-pill">CascadeFlow</span>
+          <span class="status-pill">Hindsight</span>
+        </div>
+        <div class="divider"></div>
+        <div class="user-info">
+          <div class="user-avatar">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <span class="user-email">analyst@sara.ai</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <main class="content" id="pageContent">
+      <!-- injected by JS -->
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!--  COMPLAINT MODAL                                                       -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="complaintModal" class="modal-overlay" style="display:none">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <div class="modal-header">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
+        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <div>
+        <h2 class="modal-title">File Cybercrime Complaint</h2>
+        <p class="modal-sub" id="modalSub">Session: SESS-001 | Auto-filled from intelligence</p>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="modal-steps">
+      <div class="step active" data-step="1"><div class="step-num">1</div><span>Evidence</span></div>
+      <div class="step" data-step="2"><div class="step-num">2</div><span>Details</span></div>
+      <div class="step" data-step="3"><div class="step-num">3</div><span>Submit</span></div>
+    </div>
+
+    <div id="modalStep1" class="modal-step-content">
+      <p class="step-intro">Intelligence auto-extracted from Sara's conversation:</p>
+      <div class="evidence-list" id="evidenceList"></div>
+      <button class="btn btn-teal w-full" id="modalNext1">Continue with Evidence →</button>
+    </div>
+
+    <div id="modalStep2" class="modal-step-content" style="display:none">
+      <div class="form-grid">
+        <div class="form-group"><label>Your Name</label><input type="text" id="fName" placeholder="Full name"/></div>
+        <div class="form-group"><label>Phone</label><input type="text" id="fPhone" placeholder="+91-XXXXX-XXXXX"/></div>
+        <div class="form-group"><label>Email</label><input type="email" id="fEmail" placeholder="your@email.com"/></div>
+        <div class="form-group"><label>State</label><input type="text" id="fState" placeholder="Maharashtra"/></div>
+      </div>
+      <div class="form-group mt-12">
+        <label>Complaint Type</label>
+        <select id="fType">
+          <option value="">Select type...</option>
+          <option>UPI/Payment Fraud</option>
+          <option>KYC Phishing</option>
+          <option>Impersonation (Police/Bank)</option>
+          <option>Lottery/Prize Scam</option>
+          <option>OTP Fraud</option>
+        </select>
+      </div>
+      <div class="form-group mt-12">
+        <label>Description</label>
+        <textarea id="fDesc" rows="4" placeholder="Auto-generated from Sara AI session..."></textarea>
+      </div>
+      <div class="form-row">
+        <button class="btn btn-ghost" id="modalBack2">← Back</button>
+        <button class="btn btn-red" id="modalSubmit">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          </svg>
+          File Complaint
+        </button>
+      </div>
+    </div>
+
+    <div id="modalStep3" class="modal-step-content" style="display:none">
+      <div class="success-screen">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        <h3 class="success-title">Complaint Filed Successfully!</h3>
+        <p class="success-sub">Your complaint has been submitted to the National Cybercrime Portal (cybercrime.gov.in)</p>
+        <div class="success-details">
+          <p>Reference No: <strong id="refNo" class="mono teal"></strong></p>
+          <p>CERT-In Alert Sent: <strong class="green">✓</strong></p>
+          <p>RBI Fraud DB Updated: <strong class="green">✓</strong></p>
+          <p>Cybercrime Helpline 1930: <strong class="green">✓ Notified</strong></p>
+        </div>
+        <div class="portal-grid">
+          <a href="https://cybercrime.gov.in" target="_blank" class="portal-link">National Cybercrime Portal</a>
+          <a href="https://cert-in.org.in" target="_blank" class="portal-link">CERT-In</a>
+          <a href="https://rbi.org.in" target="_blank" class="portal-link">RBI Ombudsman</a>
+          <a href="tel:1930" class="portal-link">I4C Helpline 1930</a>
+        </div>
+        <button class="btn btn-teal w-full" id="modalDone">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// ===== DATA.JS =====
+// ═══════════════════════════════════════════════════════════════════════
+//  SARA AI — Data Layer (converted from JSX constants)
+// ═══════════════════════════════════════════════════════════════════════
+
+const PIE_COLORS = [
+  "#0d9488","#3b82f6","#8b5cf6","#f59e0b",
+  "#ef4444","#22c55e","#f97316","#ec4899"
+];
+
+const SESSIONS = [
+  { id:"SESS-001", scammer:"+91-9876543210", type:"UPI Fraud",    threat:87, status:"active", duration:"12m 34s", entities:4, city:"Mumbai",    model:"Groq Llama3",  cost:"₹0.04" },
+  { id:"SESS-002", scammer:"+91-9123456789", type:"KYC Fraud",    threat:72, status:"active", duration:"08m 12s", entities:3, city:"Delhi",     model:"Claude 3.5",   cost:"₹0.12" },
+  { id:"SESS-003", scammer:"+91-8887776665", type:"Lottery Scam", threat:91, status:"active", duration:"21m 05s", entities:6, city:"Hyderabad", model:"Groq Llama3",  cost:"₹0.06" },
+  { id:"SESS-004", scammer:"+91-9012345678", type:"Police Scam",  threat:95, status:"active", duration:"05m 49s", entities:2, city:"Pune",      model:"Claude 3.5",   cost:"₹0.15" },
+  { id:"SESS-005", scammer:"+91-7778889990", type:"UPI Fraud",    threat:58, status:"ended",  duration:"03m 22s", entities:2, city:"Chennai",   model:"Groq Llama3",  cost:"₹0.02" },
+  { id:"SESS-006", scammer:"+91-9988001122", type:"OTP Scam",     threat:76, status:"ended",  duration:"17m 00s", entities:5, city:"Jaipur",    model:"Qwen 72B",     cost:"₹0.08" },
+];
+
+const INTELLIGENCE = [
+  { type:"UPI",      value:"scammer@ybl",            confidence:99,  session:"SESS-001", time:"2m ago",  severity:"high"     },
+  { type:"PHONE",    value:"+91-9876543210",          confidence:100, session:"SESS-001", time:"2m ago",  severity:"medium"   },
+  { type:"BANK",     value:"HDFC Bank",               confidence:95,  session:"SESS-002", time:"5m ago",  severity:"medium"   },
+  { type:"URL",      value:"fake-kyc-verify.xyz",     confidence:97,  session:"SESS-002", time:"5m ago",  severity:"high"     },
+  { type:"UPI",      value:"fraud2024@paytm",          confidence:98,  session:"SESS-003", time:"8m ago",  severity:"high"     },
+  { type:"AADHAAR",  value:"XXXX XXXX 8821",           confidence:92,  session:"SESS-003", time:"8m ago",  severity:"critical" },
+  { type:"TELEGRAM", value:"@crypto_profit99",         confidence:96,  session:"SESS-004", time:"11m ago", severity:"high"     },
+  { type:"ACCOUNT",  value:"****5821",                confidence:88,  session:"SESS-004", time:"11m ago", severity:"high"     },
+  { type:"IFSC",     value:"HDFC0001234",             confidence:100, session:"SESS-005", time:"18m ago", severity:"medium"   },
+  { type:"EMAIL",    value:"support@fake-bank.co",    confidence:94,  session:"SESS-006", time:"22m ago", severity:"high"     },
+];
+
+const CHAT_HISTORY = [
+  { role:"scammer", text:"Hello, I am calling from SBI fraud department. Your account will be blocked in 2 hours unless you verify your KYC immediately.", time:"12:01 PM", entities:["SBI","KYC"] },
+  { role:"sara",    text:"Arre bhai, kya hua? Account band ho jayega? Main toh bahut dara hui hoon. Suresh ji bhi ghar pe nahi hain abhi...", time:"12:01 PM", entities:[] },
+  { role:"scammer", text:"Yes madam, you must send ₹5000 to this UPI ID: verify@okhdfcbank for KYC verification. It will be refunded in 24 hours.", time:"12:02 PM", entities:["verify@okhdfcbank","₹5000"] },
+  { role:"sara",    text:"Ek minute beta, mera chashma dhundhti hoon. UPI ID kya tha? Mera PhonePe thoda slow hai aajkal... aur ye ₹5000 refund bhi hoga na? Suresh ji return karenge kal toh unhe bata dun?", time:"12:02 PM", entities:[] },
+  { role:"scammer", text:"Yes yes, full refund. Also give me your Aadhaar number for verification. Our officer ID is EMP-8821.", time:"12:03 PM", entities:["EMP-8821","Aadhaar"] },
+  { role:"sara",    text:"Aadhaar... hanji, wo toh almari mein rakha hai. Thoda ruko. Aur aapka naam kya hai beta? Aur ye bank ka phone number kya hai officially? Mera beta CA hai, unhe bhi check karna hoga.", time:"12:03 PM", entities:[] },
+];
+
+const SARA_RESPONSES = [
+  "Haan beta, mujhe samajh nahi aa raha... Suresh ji se puchna padega. Aap apna naam bataiye pehle?",
+  "Arre, itni jaldi? Mera phone toh charge ho raha hai aajkal bahut slow... aap apna UPI ID dobara batao?",
+  "Beta, main toh ghabra gayi hoon. Ye paise kis account mein bhejne hain? Aur aapka employee number kya hai officially?",
+  "OTP? Hanji, thodi der mein aayega... mera network thoda weak hai. Aap kahan se call kar rahe ho? Kaunsi branch?",
+  "Suresh ji ne kaha tha ke bank kabhi OTP nahi mangta phone pe. Aap sure ho? Apna ID card dikhaoge mujhe?",
+];
+
+const ANALYTICS_WEEKLY = [
+  { day:"Mon", sessions:42, entities:186, threats:8,  cost:2.34 },
+  { day:"Tue", sessions:58, entities:241, threats:14, cost:3.12 },
+  { day:"Wed", sessions:71, entities:318, threats:19, cost:4.56 },
+  { day:"Thu", sessions:65, entities:287, threats:16, cost:3.89 },
+  { day:"Fri", sessions:89, entities:412, threats:23, cost:5.67 },
+  { day:"Sat", sessions:112,entities:521, threats:31, cost:7.23 },
+  { day:"Sun", sessions:94, entities:438, threats:28, cost:6.45 },
+];
+
+const SCAM_PIE   = [
+  { name:"UPI Fraud", value:38 }, { name:"KYC Fraud", value:22 },
+  { name:"Lottery Scam", value:15 }, { name:"Police Scam", value:12 },
+  { name:"OTP Scam", value:8 }, { name:"Investment", value:5 },
+];
+const MODEL_PIE  = [
+  { name:"Groq Llama3", value:52 }, { name:"Claude 3.5", value:28 },
+  { name:"Qwen 72B", value:14 },    { name:"Local", value:6 },
+];
+const SEVERITY_PIE = [
+  { name:"Critical", value:12 }, { name:"High", value:34 },
+  { name:"Medium", value:41 },   { name:"Low", value:13 },
+];
+
+const CITY_DATA = [
+  { name:"Mumbai",    value:189, color:"#0d9488" },
+  { name:"Delhi",     value:156, color:"#3b82f6" },
+  { name:"Bangalore", value:134, color:"#8b5cf6" },
+  { name:"Hyderabad", value:112, color:"#f59e0b" },
+  { name:"Chennai",   value:98,  color:"#ef4444" },
+  { name:"Pune",      value:87,  color:"#22c55e" },
+  { name:"Jaipur",    value:76,  color:"#f97316" },
+  { name:"Kolkata",   value:65,  color:"#ec4899" },
+];
+
+const TREEMAP_DATA = [
+  { name:"UPI IDs",           size:412, color:"#0d9488" },
+  { name:"Phone Numbers",     size:387, color:"#3b82f6" },
+  { name:"Bank Names",        size:298, color:"#8b5cf6" },
+  { name:"URLs",              size:201, color:"#f59e0b" },
+  { name:"Telegram",          size:167, color:"#ef4444" },
+  { name:"Email IDs",         size:134, color:"#22c55e" },
+  { name:"Aadhaar (masked)",  size:98,  color:"#f97316" },
+  { name:"IFSC Codes",        size:87,  color:"#ec4899" },
+  { name:"Account Nos.",      size:76,  color:"#06b6d4" },
+  { name:"WhatsApp",          size:54,  color:"#a78bfa" },
+];
+
+const RADAR_DATA = [
+  { metric:"UPI Detection",   sara:95, baseline:70 },
+  { metric:"Phone Validation",sara:100,baseline:85 },
+  { metric:"URL Scanning",    sara:88, baseline:60 },
+  { metric:"AADHAAR Masking", sara:92, baseline:75 },
+  { metric:"Bank ID",         sara:90, baseline:80 },
+  { metric:"Persona Hold",    sara:97, baseline:55 },
+];
+
+const TIMELINE_DATA = [
+  { time:"00:00", threat:10 }, { time:"01:00", threat:18 }, { time:"02:00", threat:42 },
+  { time:"03:00", threat:75 }, { time:"04:00", threat:68 }, { time:"05:00", threat:82 },
+  { time:"06:00", threat:95 }, { time:"07:00", threat:87 }, { time:"08:00", threat:71 },
+  { time:"09:00", threat:60 }, { time:"10:00", threat:45 }, { time:"11:00", threat:38 },
+];
+
+const CYBERCRIME_PORTALS = [
+  { name:"National Cybercrime Portal", url:"https://cybercrime.gov.in", desc:"File FIR online - Ministry of Home Affairs" },
+  { name:"CERT-In",                   url:"https://cert-in.org.in",   desc:"Computer Emergency Response Team India" },
+  { name:"RBI Ombudsman",             url:"https://rbi.org.in",       desc:"Report banking fraud & UPI scams" },
+  { name:"TRAI DND",                  url:"https://trai.gov.in",      desc:"Block spam calls & SMS" },
+  { name:"I4C Helpline",              url:"tel:1930",                  desc:"Cyber Crime Helpline: 1930 (24/7)" },
+];
+
+const MEMORY_PATTERNS = [
+  { id:"PAT-001", pattern:"UPI refund trick",       sessions:23, lastSeen:"2h ago",  confidence:94 },
+  { id:"PAT-002", pattern:"Fake KYC officer",        sessions:41, lastSeen:"30m ago", confidence:98 },
+  { id:"PAT-003", pattern:"Police intimidation",     sessions:17, lastSeen:"1h ago",  confidence:91 },
+  { id:"PAT-004", pattern:"Lottery winner script",   sessions:29, lastSeen:"45m ago", confidence:96 },
+  { id:"PAT-005", pattern:"OTP phishing flow",       sessions:35, lastSeen:"15m ago", confidence:97 },
+];
+
+// Utility: threat bar color
+function threatColor(score) {
+  if (score >= 90) return '#ef4444';
+  if (score >= 70) return '#f59e0b';
+  if (score >= 50) return '#f97316';
+  return '#22c55e';
+}
+
+// Utility: badge color by severity
+function severityColor(sev) {
+  if (sev === 'critical') return '#ef4444';
+  if (sev === 'high')     return '#f59e0b';
+  return '#0d9488';
+}
+
+// Utility: build badge HTML
+function makeBadge(text, color) {
+  const r = parseInt(color.slice(1,3),16);
+  const g = parseInt(color.slice(3,5),16);
+  const b = parseInt(color.slice(5,7),16);
+  return `<span class="badge badge-sm" style="background:rgba(${r},${g},${b},.13);border-color:rgba(${r},${g},${b},.27);color:${color};">${text}</span>`;
+}
+
+// Utility: threat bar HTML
+function makeThreatBar(score) {
+  const c = threatColor(score);
+  return `<div class="threat-bar"><div class="threat-bar-fill" style="width:${score}%;background:${c};box-shadow:0 0 8px ${c};"></div></div>`;
+}
+
+// Section title helper
+function makeSectionTitle(iconSvg, title, subtitle) {
+  return `
+    <div class="section-title">
+      <div class="section-title-row">
+        ${iconSvg ? `<svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${iconSvg}</svg>` : ''}
+        <h2>${title}</h2>
+      </div>
+      ${subtitle ? `<p class="section-sub">${subtitle}</p>` : ''}
+    </div>`;
+}
+
+// ===== CHARTS.JS =====
+// ═══════════════════════════════════════════════════════════════════════
+//  SARA AI — Charts (Chart.js wrappers replacing recharts)
+// ═══════════════════════════════════════════════════════════════════════
+
+// Global chart registry to destroy before re-render
+const _charts = {};
+
+function destroyChart(id) {
+  if (_charts[id]) { _charts[id].destroy(); delete _charts[id]; }
+}
+
+function createChart(id, config) {
+  destroyChart(id);
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  _charts[id] = new Chart(canvas, config);
+  return _charts[id];
+}
+
+const GRID_COLOR  = 'var(--s800)';
+const TICK_COLOR  = 'var(--s400)';
+const FONT_FAMILY = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+
+const baseScales = {
+  x: { grid: { color: GRID_COLOR }, ticks: { color: TICK_COLOR, font: { size: 11, family: FONT_FAMILY } }, border: { display: false } },
+  y: { grid: { color: GRID_COLOR }, ticks: { color: TICK_COLOR, font: { size: 11, family: FONT_FAMILY } }, border: { display: false } },
+};
+
+const baseTooltip = {
+  backgroundColor: 'var(--s900)',
+  borderColor: 'var(--s800)',
+  borderWidth: 1,
+  titleColor: 'var(--s500)',
+  bodyColor: 'var(--s100)',
+  padding: 10,
+};
+
+const baseLegend = {
+  labels: { color: 'var(--s500)', font: { size: 11, family: FONT_FAMILY }, boxWidth: 12, usePointStyle: true }
+};
+
+// ── Sessions & Threats Area Chart ─────────────────────────────────────
+function renderSessionsChart() {
+  createChart('chartSessions', {
+    type: 'line',
+    data: {
+      labels: ANALYTICS_WEEKLY.map(d => d.day),
+      datasets: [
+        {
+          label: 'Sessions',
+          data: ANALYTICS_WEEKLY.map(d => d.sessions),
+          borderColor: '#0d9488',
+          backgroundColor: 'rgba(13,148,136,.18)',
+          fill: true,
+          tension: 0.4,
+          borderWidth: 2,
+          pointRadius: 0,
+        },
+        {
+          label: 'Threats',
+          data: ANALYTICS_WEEKLY.map(d => d.threats),
+          borderColor: '#ef4444',
+          backgroundColor: 'rgba(239,68,68,.13)',
+          fill: true,
+          tension: 0.4,
+          borderWidth: 2,
+          pointRadius: 0,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { tooltip: baseTooltip, legend: baseLegend },
+      scales: baseScales,
+    }
+  });
+}
+
+// ── Entities Bar Chart ─────────────────────────────────────────────────
+function renderEntitiesChart() {
+  createChart('chartEntities', {
+    type: 'bar',
+    data: {
+      labels: ANALYTICS_WEEKLY.map(d => d.day),
+      datasets: [{
+        label: 'Entities',
+        data: ANALYTICS_WEEKLY.map(d => d.entities),
+        backgroundColor: PIE_COLORS,
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { tooltip: baseTooltip, legend: { display: false } },
+      scales: baseScales,
+    }
+  });
+}
+
+// ── Pie Charts ──────────────────────────────────────────────────────────
+function renderPieChart(id, data) {
+  createChart(id, {
+    type: 'doughnut',
+    data: {
+      labels: data.map(d => d.name),
+      datasets: [{
+        data: data.map(d => d.value),
+        backgroundColor: PIE_COLORS,
+        borderWidth: 2,
+        borderColor: 'var(--s900)',
+        hoverOffset: 6,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '40%',
+      plugins: {
+        tooltip: baseTooltip,
+        legend: { position: 'bottom', labels: { ...baseLegend.labels, boxWidth: 8, padding: 8 } }
+      }
+    }
+  });
+}
+
+// ── Radar Chart ─────────────────────────────────────────────────────────
+function renderRadarChart() {
+  createChart('chartRadar', {
+    type: 'radar',
+    data: {
+      labels: RADAR_DATA.map(d => d.metric),
+      datasets: [
+        {
+          label: 'Sara AI',
+          data: RADAR_DATA.map(d => d.sara),
+          borderColor: '#0d9488',
+          backgroundColor: 'rgba(13,148,136,.2)',
+          borderWidth: 2,
+          pointRadius: 3,
+        },
+        {
+          label: 'Baseline',
+          data: RADAR_DATA.map(d => d.baseline),
+          borderColor: '#8b5cf6',
+          backgroundColor: 'rgba(139,92,246,.12)',
+          borderWidth: 2,
+          pointRadius: 3,
+        }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { tooltip: baseTooltip, legend: baseLegend },
+      scales: {
+        r: {
+          grid: { color: 'var(--s800)' },
+          ticks: { color: 'var(--s300)', backdropColor: 'transparent', font: { size: 9 } },
+          pointLabels: { color: 'var(--s500)', font: { size: 10, family: FONT_FAMILY } },
+          suggestedMin: 0, suggestedMax: 100,
+        }
+      }
+    }
+  });
+}
+
+// ── Threat Timeline Line Chart ──────────────────────────────────────────
+function renderTimelineChart() {
+  createChart('chartTimeline', {
+    type: 'line',
+    data: {
+      labels: TIMELINE_DATA.map(d => d.time),
+      datasets: [{
+        label: 'Threat Score',
+        data: TIMELINE_DATA.map(d => d.threat),
+        borderColor: '#ef4444',
+        borderWidth: 3,
+        tension: 0.4,
+        fill: false,
+        pointRadius: 3,
+        pointBackgroundColor: '#ef4444',
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { tooltip: baseTooltip, legend: { display: false } },
+      scales: { ...baseScales, y: { ...baseScales.y, min: 0, max: 100 } }
+    }
+  });
+}
+
+// ── Treemap (manual SVG since Chart.js doesn't have treemap built-in) ──
+function renderTreemap(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const W = container.clientWidth || 700;
+  const H = 350;
+  const total = TREEMAP_DATA.reduce((s, d) => s + d.size, 0);
+
+  // Simple squarify
+  function layout(data, x, y, w, h) {
+    const rects = [];
+    let remaining = data.slice().sort((a, b) => b.size - a.size);
+    let cx = x, cy = y, cw = w, ch = h;
+    while (remaining.length > 0) {
+      const isRow = cw >= ch;
+      let row = [];
+      let rowSum = 0;
+      for (let i = 0; i < remaining.length; i++) {
+        const test = [...row, remaining[i]];
+        const testSum = rowSum + remaining[i].size;
+        const dim = isRow ? ch : cw;
+        const rowWidth = (testSum / total) * (isRow ? cw : ch);
+        const worst = Math.max(...test.map(d => {
+          const dh = (d.size / testSum) * dim;
+          const dw = rowWidth;
+          return Math.max(dw / dh, dh / dw);
+        }));
+        if (row.length > 0 && worst > Math.max(...row.map(d => {
+          const prevSum = rowSum;
+          const prevWidth = (prevSum / total) * (isRow ? cw : ch);
+          const dh = (d.size / prevSum) * dim;
+          return Math.max(prevWidth / dh, dh / prevWidth);
+        }))) break;
+        row.push(remaining[i]);
+        rowSum += remaining[i].size;
+      }
+      const rowWidth = (rowSum / total) * (isRow ? cw : ch);
+      let off = 0;
+      for (const d of row) {
+        const frac = d.size / rowSum;
+        const rw = isRow ? rowWidth : frac * cw;
+        const rh = isRow ? frac * ch : rowWidth;
+        const rx = isRow ? cx : cx + off;
+        const ry = isRow ? cy + off : cy;
+        rects.push({ ...d, x: rx, y: ry, w: rw, h: rh });
+        off += isRow ? rh : rw;
+      }
+      if (isRow) { cx += rowWidth; cw -= rowWidth; }
+      else        { cy += rowWidth; ch -= rowWidth; }
+      remaining = remaining.slice(row.length);
+    }
+    return rects;
+  }
+
+  const rects = layout(TREEMAP_DATA, 0, 0, W, H);
+  let svg = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="border-radius:8px;overflow:hidden;">`;
+  for (const r of rects) {
+    svg += `<rect x="${r.x+1}" y="${r.y+1}" width="${r.w-2}" height="${r.h-2}" fill="${r.color}" rx="4" style="opacity:.9"/>`;
+    if (r.w > 60 && r.h > 30) {
+      svg += `<text x="${r.x+r.w/2}" y="${r.y+r.h/2-4}" fill="var(--s100)" text-anchor="middle" font-size="11" font-weight="700" font-family="${FONT_FAMILY}">${r.name}</text>`;
+      svg += `<text x="${r.x+r.w/2}" y="${r.y+r.h/2+10}" fill="var(--s400)" text-anchor="middle" font-size="10" font-family="${FONT_FAMILY}">${r.size}</text>`;
+    }
+  }
+  svg += '</svg>';
+  container.innerHTML = svg;
+}
+
+// ── City Bar (horizontal) ───────────────────────────────────────────────
+function renderCityChart() {
+  createChart('chartCity', {
+    type: 'bar',
+    data: {
+      labels: CITY_DATA.map(d => d.name),
+      datasets: [{
+        label: 'Sessions',
+        data: CITY_DATA.map(d => d.value),
+        backgroundColor: CITY_DATA.map(d => d.color),
+        borderRadius: { topRight: 4, bottomRight: 4 },
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { tooltip: baseTooltip, legend: { display: false } },
+      scales: {
+        x: { ...baseScales.x },
+        y: { ...baseScales.y, ticks: { color: 'var(--s500)', font: { size: 11 } } }
+      }
+    }
+  });
+}
+
+// ── Region Stacked Bar ──────────────────────────────────────────────────
+function renderRegionChart() {
+  const regionData = [
+    { region:"North", upi:45, kyc:28, lottery:18, police:9 },
+    { region:"South", upi:38, kyc:22, lottery:25, police:15 },
+    { region:"East",  upi:52, kyc:31, lottery:12, police:5 },
+    { region:"West",  upi:41, kyc:19, lottery:22, police:18 },
+  ];
+  createChart('chartRegion', {
+    type: 'bar',
+    data: {
+      labels: regionData.map(d => d.region),
+      datasets: [
+        { label:'UPI',     data: regionData.map(d=>d.upi),     backgroundColor:'#0d9488', stack:'s' },
+        { label:'KYC',     data: regionData.map(d=>d.kyc),     backgroundColor:'#3b82f6', stack:'s' },
+        { label:'Lottery', data: regionData.map(d=>d.lottery), backgroundColor:'#f59e0b', stack:'s' },
+        { label:'Police',  data: regionData.map(d=>d.police),  backgroundColor:'#ef4444', stack:'s', borderRadius: { topLeft: 4, topRight: 4 } },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { tooltip: baseTooltip, legend: baseLegend },
+      scales: baseScales,
+    }
+  });
+}
+
+// ── Peak Hours ──────────────────────────────────────────────────────────
+function renderPeakChart() {
+  const peakData = [
+    {h:"6am",s:12},{h:"8am",s:28},{h:"10am",s:67},{h:"12pm",s:89},
+    {h:"2pm",s:78},{h:"4pm",s:94},{h:"6pm",s:112},{h:"8pm",s:98},
+    {h:"10pm",s:56},{h:"12am",s:21},{h:"2am",s:8},{h:"4am",s:5},
+  ];
+  createChart('chartPeak', {
+    type: 'line',
+    data: {
+      labels: peakData.map(d => d.h),
+      datasets: [{
+        label: 'Sessions',
+        data: peakData.map(d => d.s),
+        borderColor: '#f59e0b',
+        backgroundColor: 'rgba(245,158,11,.2)',
+        fill: true,
+        tension: 0.4,
+        borderWidth: 2,
+        pointRadius: 0,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { tooltip: baseTooltip, legend: { display: false } },
+      scales: baseScales,
+    }
+  });
+}
+
+// ── Model Cost Bar ──────────────────────────────────────────────────────
+function renderModelCostChart() {
+  const mData = [
+    { model:"Local", cost:0, sessions:312 },
+    { model:"Groq Llama3", cost:0.04, sessions:1847 },
+    { model:"Qwen 72B", cost:0.09, sessions:523 },
+    { model:"Claude 3.5", cost:0.18, sessions:341 },
+  ];
+  createChart('chartModelCost', {
+    type: 'bar',
+    data: {
+      labels: mData.map(d => d.model),
+      datasets: [{
+        label: '₹ Cost/Session',
+        data: mData.map(d => d.cost),
+        backgroundColor: ['#22c55e','#0d9488','#3b82f6','#f59e0b'],
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { tooltip: baseTooltip, legend: { display: false } },
+      scales: baseScales,
+    }
+  });
+}
+
+// ── Model Latency Area ──────────────────────────────────────────────────
+function renderLatencyChart() {
+  const lData = [
+    { p:"p50", groq:185, qwen:720, claude:1340 },
+    { p:"p75", groq:280, qwen:950, claude:1820 },
+    { p:"p90", groq:420, qwen:1200, claude:2400 },
+    { p:"p95", groq:580, qwen:1500, claude:3100 },
+    { p:"p99", groq:890, qwen:2100, claude:4800 },
+  ];
+  createChart('chartLatency', {
+    type: 'line',
+    data: {
+      labels: lData.map(d => d.p),
+      datasets: [
+        { label:'Groq', data: lData.map(d=>d.groq), borderColor:'#0d9488', backgroundColor:'rgba(13,148,136,.13)', fill:true, tension:0.4, borderWidth:2, pointRadius:3 },
+        { label:'Qwen', data: lData.map(d=>d.qwen), borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,.13)', fill:true, tension:0.4, borderWidth:2, pointRadius:3 },
+        { label:'Claude',data: lData.map(d=>d.claude), borderColor:'#8b5cf6', backgroundColor:'rgba(139,92,246,.13)', fill:true, tension:0.4, borderWidth:2, pointRadius:3 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { tooltip: baseTooltip, legend: baseLegend },
+      scales: { ...baseScales, y: { ...baseScales.y, ticks: { ...baseScales.y.ticks, callback: v => v+'ms' } } }
+    }
+  });
+}
+
+// ── Extraction Speed Horizontal Bar ────────────────────────────────────
+function renderSpeedChart() {
+  createChart('chartSpeed', {
+    type: 'bar',
+    data: {
+      labels: ['Regex','Keyword','spaCy NER','LLM Fallback'],
+      datasets: [{
+        label: 'ms',
+        data: [0.8, 2, 45, 380],
+        backgroundColor: ['#22c55e','#3b82f6','#0d9488','#f59e0b'],
+        borderRadius: { topRight: 4, bottomRight: 4 },
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      plugins: { tooltip: baseTooltip, legend: { display: false } },
+      scales: {
+        x: { ...baseScales.x },
+        y: { ...baseScales.y, ticks: { color:'var(--s500)', font:{ size:11 } } }
+      }
+    }
+  });
+}
+
+// ── Pattern Co-occurrence Radar ──────────────────────────────────────────
+function renderCooccurrenceChart() {
+  const coData = [
+    { pattern:"UPI + OTP", sessions:89 },
+    { pattern:"KYC + Aadhaar", sessions:67 },
+    { pattern:"Police + Fine", sessions:54 },
+    { pattern:"Lottery + Tax", sessions:48 },
+    { pattern:"Bank + Block", sessions:73 },
+    { pattern:"Refund + Transfer", sessions:61 },
+  ];
+  createChart('chartCooccurrence', {
+    type: 'radar',
+    data: {
+      labels: coData.map(d => d.pattern),
+      datasets: [{
+        label: 'Co-occurrence',
+        data: coData.map(d => d.sessions),
+        borderColor: '#8b5cf6',
+        backgroundColor: 'rgba(139,92,246,.2)',
+        borderWidth: 2,
+        pointRadius: 3,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { tooltip: baseTooltip, legend: { display: false } },
+      scales: {
+        r: {
+          grid: { color: 'var(--s800)' },
+          ticks: { color: 'var(--s300)', backdropColor: 'transparent', font: { size: 9 } },
+          pointLabels: { color: 'var(--s500)', font: { size: 9, family: FONT_FAMILY } },
+        }
+      }
+    }
+  });
+}
+
+// ── Pattern Detection Rate Line ──────────────────────────────────────────
+function renderPatternRateChart() {
+  const prData = [
+    { week:"W1", regex:78, spacy:45, llm:12 },
+    { week:"W2", regex:84, spacy:52, llm:18 },
+    { week:"W3", regex:89, spacy:61, llm:24 },
+    { week:"W4", regex:92, spacy:68, llm:31 },
+    { week:"W5", regex:95, spacy:74, llm:38 },
+    { week:"W6", regex:97, spacy:81, llm:45 },
+  ];
+  createChart('chartPatternRate', {
+    type: 'line',
+    data: {
+      labels: prData.map(d => d.week),
+      datasets: [
+        { label:'Regex', data: prData.map(d=>d.regex), borderColor:'#22c55e', borderWidth:2, tension:0.3, pointRadius:0 },
+        { label:'spaCy', data: prData.map(d=>d.spacy), borderColor:'#0d9488', borderWidth:2, tension:0.3, pointRadius:0 },
+        { label:'LLM',   data: prData.map(d=>d.llm),   borderColor:'#8b5cf6', borderWidth:2, tension:0.3, pointRadius:0 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { tooltip: baseTooltip, legend: baseLegend },
+      scales: { ...baseScales, y: { ...baseScales.y, ticks: { ...baseScales.y.ticks, callback: v => v+'%' } } }
+    }
+  });
+}
+
+// ── Complaints Bar ───────────────────────────────────────────────────────
+function renderComplaintsChart() {
+  const cData = [
+    { day:"Week 1", filed:12, resolved:8 },
+    { day:"Week 2", filed:19, resolved:14 },
+    { day:"Week 3", filed:27, resolved:21 },
+    { day:"Week 4", filed:34, resolved:28 },
+  ];
+  createChart('chartComplaints', {
+    type: 'bar',
+    data: {
+      labels: cData.map(d => d.day),
+      datasets: [
+        { label:'Filed',    data: cData.map(d=>d.filed),    backgroundColor:'#ef4444', borderRadius:4 },
+        { label:'Resolved', data: cData.map(d=>d.resolved), backgroundColor:'#22c55e', borderRadius:4 },
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { tooltip: baseTooltip, legend: baseLegend },
+      scales: baseScales,
+    }
+  });
+}
+
+// ===== CHAT PANEL =====
+// ═══════════════════════════════════════════════════════════════════════
+//  SARA AI — Chat Panel
+// ═══════════════════════════════════════════════════════════════════════
+
+let chatMessages = [...CHAT_HISTORY];
+let saraThinking = false;
+let ttsActive    = false;
+let sttActive    = false;
+let ttsTimer     = null;
+
+// Web Speech API
+let recognition = null;
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.lang = 'en-IN';
+}
+
+function speakText(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(text);
+  utt.lang = 'hi-IN';
+  utt.rate = 0.9;
+  utt.pitch = 1.1;
+  const voices = window.speechSynthesis.getVoices();
+  const hiVoice = voices.find(v => v.lang.startsWith('hi'));
+  if (hiVoice) utt.voice = hiVoice;
+  utt.onend = () => { ttsActive = false; updateTTSIndicator(); };
+  window.speechSynthesis.speak(utt);
+}
+
+function updateTTSIndicator() {
+  const ind = document.getElementById('speakingIndicator');
+  if (!ind) return;
+  ind.style.display = ttsActive || saraThinking ? 'flex' : 'none';
+}
+
+function updateWaveform() {
+  const bars = document.querySelectorAll('.wave-bar');
+  bars.forEach(bar => {
+    if (ttsActive || saraThinking) {
+      bar.classList.add('active');
+      const h = Math.random() * 24 + 6;
+      bar.style.height = h + 'px';
+    } else {
+      bar.classList.remove('active');
+      bar.style.height = '4px';
+    }
+  });
+}
+
+setInterval(updateWaveform, 100);
+
+function renderChatMessages() {
+  const container = document.getElementById('chatMessages');
+  if (!container) return;
+
+  let html = '';
+  for (const msg of chatMessages) {
+    const isSara = msg.role === 'sara';
+    const roleLabel = isSara
+      ? `<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#22c55e"/></svg> SARA SHARMA`
+      : `<svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#ef4444"/></svg> SCAMMER`;
+    const entHtml = (msg.entities || []).length > 0
+      ? `<div class="msg-entities">${msg.entities.map(e => makeBadge('Target: ' + e, '#f59e0b')).join('')}</div>`
+      : '';
+    html += `
+      <div class="msg-wrap-${isSara ? 'sara' : 'scammer'}">
+        <div class="msg-bubble ${isSara ? 'sara' : 'scammer'}">
+          <div class="msg-role ${isSara ? 'sara' : 'scammer'}">${roleLabel} · ${msg.time}</div>
+          <p class="msg-text">${escapeHtml(msg.text)}</p>
+          ${entHtml}
+        </div>
+      </div>`;
+  }
+
+  if (saraThinking) {
+    html += `
+      <div class="msg-wrap-sara">
+        <div class="thinking-bubble">
+          <div class="msg-role sara"><svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="#22c55e"/></svg> SARA SHARMA · Processing...</div>
+          <div class="thinking-dots">
+            <div class="thinking-dot"></div>
+            <div class="thinking-dot"></div>
+            <div class="thinking-dot"></div>
+            <span class="thinking-label">Groq Llama3 generating response...</span>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  container.innerHTML = html;
+  container.scrollTop = container.scrollHeight;
+}
+
+function simulateSara() {
+  if (saraThinking) return;
+  saraThinking = true;
+  updateTTSIndicator();
+  renderChatMessages();
+
+  const delay = 1500 + Math.random() * 1000;
+  setTimeout(() => {
+    const resp = SARA_RESPONSES[Math.floor(Math.random() * SARA_RESPONSES.length)];
+    const now = new Date();
+    const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    chatMessages.push({ role: 'sara', text: resp, time, entities: [] });
+    saraThinking = false;
+    ttsActive = true;
+    updateTTSIndicator();
+    renderChatMessages();
+    speakText(resp);
+    if (ttsTimer) clearTimeout(ttsTimer);
+    ttsTimer = setTimeout(() => { ttsActive = false; updateTTSIndicator(); }, 4000);
+
+    // Emit to socket if connected
+    if (window._socket) {
+      window._socket.emit('sara_message', { text: resp, time, session: window.selectedSession?.id });
+    }
+  }, delay);
+}
+
+function sendScammerMessage(text) {
+  if (!text.trim()) return;
+  const now = new Date();
+  const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  chatMessages.push({ role: 'scammer', text, time, entities: [] });
+  renderChatMessages();
+
+  if (window._socket) {
+    window._socket.emit('scammer_message', { text, time, session: window.selectedSession?.id });
+  }
+  simulateSara();
+}
+
+function toggleSTT() {
+  if (!recognition) {
+    // Fallback simulation
+    sttActive = !sttActive;
+    const sttBtn = document.getElementById('sttBtn');
+    const input  = document.getElementById('chatInput');
+    if (sttBtn) sttBtn.classList.toggle('active', sttActive);
+    if (sttActive && input) {
+      input.placeholder = 'Listening... (STT active)';
+      setTimeout(() => {
+        input.value = 'Madam aapko abhi ₹5000 transfer karne honge verify@ybl pe';
+        sttActive = false;
+        if (sttBtn) sttBtn.classList.remove('active');
+        input.placeholder = 'Type scammer message...';
+      }, 2000);
+    }
+    return;
+  }
+
+  if (sttActive) {
+    recognition.stop();
+    sttActive = false;
+  } else {
+    sttActive = true;
+    recognition.start();
+  }
+  const sttBtn = document.getElementById('sttBtn');
+  const input  = document.getElementById('chatInput');
+  if (sttBtn) sttBtn.classList.toggle('active', sttActive);
+  if (input)  input.placeholder = sttActive ? 'Listening... (STT active)' : 'Type scammer message...';
+}
+
+if (recognition) {
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    const input = document.getElementById('chatInput');
+    if (input) input.value = transcript;
+    sttActive = false;
+    const sttBtn = document.getElementById('sttBtn');
+    if (sttBtn) sttBtn.classList.remove('active');
+  };
+  recognition.onend = () => {
+    sttActive = false;
+    const sttBtn = document.getElementById('sttBtn');
+    if (sttBtn) sttBtn.classList.remove('active');
+  };
+}
+
+function initChatListeners() {
+  const sendBtn = document.getElementById('sendBtn');
+  const saraBtn = document.getElementById('saraReplyBtn');
+  const input   = document.getElementById('chatInput');
+  const sttBtn  = document.getElementById('sttBtn');
+
+  if (sendBtn) sendBtn.addEventListener('click', () => {
+    const val = input?.value || '';
+    if (val.trim()) { sendScammerMessage(val); input.value = ''; }
+  });
+  if (input) input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && input.value.trim()) { sendScammerMessage(input.value); input.value = ''; }
+  });
+  if (saraBtn) saraBtn.addEventListener('click', () => simulateSara());
+  if (sttBtn)  sttBtn.addEventListener('click',  () => toggleSTT());
+}
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function buildChatPanel(session) {
+  return `
+    <div class="card chat-panel" style="height:100%;">
+      <div class="chat-header">
+        <div class="chat-header-left">
+          <span class="pulse-dot green"></span>
+          <span class="chat-title">${session.id} — ${session.scammer}</span>
+        </div>
+        <div class="chat-header-right">
+          <div class="speaking-indicator" id="speakingIndicator" style="display:none;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <path d="M19.07 4.93a10 10 0 010 14.14"/>
+              <path d="M15.54 8.46a5 5 0 010 7.07"/>
+            </svg>
+            SARA SPEAKING
+          </div>
+          ${makeBadge(session.type, '#f59e0b')}
+          ${makeBadge('Threat: ' + session.threat, session.threat >= 70 ? '#ef4444' : '#f59e0b')}
+        </div>
+      </div>
+
+      <!-- Waveform -->
+      <div class="waveform">
+        ${Array.from({length:20}, (_,i) => `<div class="wave-bar" style="animation-delay:${i*0.05}s;"></div>`).join('')}
+      </div>
+
+      <!-- Messages -->
+      <div class="chat-messages" id="chatMessages"></div>
+
+      <!-- Input -->
+      <div class="chat-input-area">
+        <div class="analyst-label">Analyst Override — Type as scammer to test Sara's responses</div>
+        <div class="input-row">
+          <button class="stt-btn" id="sttBtn" title="Speech to Text">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/>
+              <path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/>
+            </svg>
+          </button>
+          <input class="chat-input" id="chatInput" placeholder="Type scammer message..." autocomplete="off"/>
+          <button class="btn btn-red" id="sendBtn">Send</button>
+          <button class="btn btn-teal" id="saraReplyBtn">Sara Reply</button>
+        </div>
+        <div class="chat-footer-info">
+          <span>STT: Web Speech API</span>
+          <span class="sep">|</span>
+          <span>TTS: speechSynthesis</span>
+          <span class="sep">|</span>
+          <span>LLM: ${session.model || 'Groq Llama3'}</span>
+          <span class="sep">|</span>
+          <span class="green">CascadeFlow ✓</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ===== MODAL.JS =====
+// ═══════════════════════════════════════════════════════════════════════
+//  SARA AI — Complaint Modal
+// ═══════════════════════════════════════════════════════════════════════
+
+let modalStep = 1;
+let modalSession = null;
+
+function openComplaintModal(session) {
+  modalSession = session;
+  modalStep = 1;
+  document.getElementById('complaintModal').style.display = 'flex';
+  document.getElementById('modalSub').textContent =
+    `Session: ${session.id} | Auto-filled from intelligence`;
+
+  // Pre-fill description
+  const intel3 = INTELLIGENCE.slice(0, 3).map(e => e.value).join(', ');
+  const desc = document.getElementById('fDesc');
+  if (desc) {
+    desc.value = `Scammer called from ${session.scammer} posing as a bank official. ` +
+      `Requested UPI transfer and Aadhaar details. Session ID: ${session.id}. ` +
+      `Intelligence captured: ${intel3}.`;
+  }
+
+  // Build evidence list
+  const list = document.getElementById('evidenceList');
+  if (list) {
+    list.innerHTML = INTELLIGENCE.slice(0, 5).map((e, i) => `
+      <div class="evidence-item" style="${i === 4 ? 'border-bottom:none;' : ''}">
+        <div class="evidence-left">
+          ${makeBadge(e.type, e.severity === 'critical' ? '#ef4444' : e.severity === 'high' ? '#f59e0b' : '#0d9488')}
+          <span class="evidence-val">${e.value}</span>
+        </div>
+        <span class="evidence-conf">✓ ${e.confidence}%</span>
+      </div>`).join('');
+  }
+
+  setModalStep(1);
+}
+
+function closeComplaintModal() {
+  document.getElementById('complaintModal').style.display = 'none';
+  modalSession = null;
+  modalStep = 1;
+  // Reset form
+  ['fName','fPhone','fEmail','fState','fType'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+}
+
+function setModalStep(step) {
+  modalStep = step;
+
+  // Update step indicators
+  document.querySelectorAll('.step').forEach((el, i) => {
+    el.classList.remove('active','done');
+    if (i + 1 < step)  el.classList.add('done');
+    if (i + 1 === step) el.classList.add('active');
+    const num = el.querySelector('.step-num');
+    if (num) num.textContent = i + 1 < step ? '✓' : (i + 1);
+  });
+
+  // Show correct content panel
+  document.getElementById('modalStep1').style.display = step === 1 ? 'block' : 'none';
+  document.getElementById('modalStep2').style.display = step === 2 ? 'block' : 'none';
+  document.getElementById('modalStep3').style.display = step === 3 ? 'block' : 'none';
+
+  if (step === 3) {
+    const ref = 'CC/2025/MH/' + (Math.floor(Math.random() * 900000) + 100000);
+    const el = document.getElementById('refNo');
+    if (el) el.textContent = ref;
+
+    // Save to backend
+    if (modalSession) {
+      const payload = {
+        sessionId: modalSession.id,
+        scammer: modalSession.scammer,
+        type: modalSession.type,
+        refNo: ref,
+        intelligence: INTELLIGENCE.slice(0, 5),
+        name:  document.getElementById('fName')?.value,
+        phone: document.getElementById('fPhone')?.value,
+        email: document.getElementById('fEmail')?.value,
+        state: document.getElementById('fState')?.value,
+        complaintType: document.getElementById('fType')?.value,
+        description:   document.getElementById('fDesc')?.value,
+        timestamp: new Date().toISOString(),
+      };
+      fetch('/api/complaints', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }).catch(() => {}); // non-blocking
+    }
+  }
+}
+
+function initModalListeners() {
+  document.getElementById('modalClose')?.addEventListener('click', closeComplaintModal);
+  document.getElementById('modalDone')?.addEventListener('click', closeComplaintModal);
+  document.getElementById('modalNext1')?.addEventListener('click', () => setModalStep(2));
+  document.getElementById('modalBack2')?.addEventListener('click', () => setModalStep(1));
+  document.getElementById('modalSubmit')?.addEventListener('click', () => {
+    setModalStep(3);
+  });
+
+  // Close on overlay click
+  document.getElementById('complaintModal')?.addEventListener('click', (e) => {
+    if (e.target === document.getElementById('complaintModal')) closeComplaintModal();
+  });
+}
+
+// ===== PAGES.JS =====
+// ═══════════════════════════════════════════════════════════════════════
+//  SARA AI — Page Renderers
+// ═══════════════════════════════════════════════════════════════════════
+
+// ── SVG Icon snippets ─────────────────────────────────────────────────
+const ICON = {
+  dashboard:  '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
+  phone:      '<path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.5 9.93a19.79 19.79 0 01-3-8.59A2 2 0 013.48 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.91 8.91a16 16 0 006.29 6.29l1.28-1.28a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>',
+  target:     '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  brain:      '<path d="M12 2a10 10 0 0110 10c0 5.52-4.48 10-10 10S2 17.52 2 12"/><path d="M12 6v6l4 2"/>',
+  bar:        '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>',
+  alert:      '<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  settings:   '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>',
+  trending:   '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
+  clock:      '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  map:        '<polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>',
+  db:         '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>',
+  net:        '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>',
+  shield:     '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  link:       '<path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>',
+  eye:        '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>',
+};
+
+function ico(key) {
+  return `<svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${ICON[key]||''}</svg>`;
+}
+
+function sectionTitle(iconKey, title, subtitle) {
+  return `
+    <div class="section-title">
+      <div class="section-title-row">${ico(iconKey)}<h2>${title}</h2></div>
+      ${subtitle ? `<p class="section-sub">${subtitle}</p>` : ''}
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  DASHBOARD PAGE
+// ════════════════════════════════════════════════════════════════════════
+function renderDashboard() {
+  const s = window.selectedSession || SESSIONS[0];
+
+  return `
+    <div class="flex-col">
+      <!-- Stats Row -->
+      <div class="grid-auto">
+        ${statCard('Live Sessions', window.liveCount || 4, '+2', '#0d9488', true, ICON.phone)}
+        ${statCard('Intel Extracted', (window.totalIntel || 1842).toLocaleString(), '+127', '#3b82f6', false, ICON.target)}
+        ${statCard('Avg Threat', '76.4', '+8.2', '#ef4444', false, ICON.alert)}
+        ${statCard('Cost Today', '₹4.23', '-12%', '#22c55e', false, ICON.db)}
+        ${statCard('Sara Accuracy', '97.3%', '+0.4%', '#8b5cf6', false, ICON.shield)}
+        ${statCard('Uptime', '99.97%', '', '#0d9488', false, ICON.trending)}
+      </div>
+
+      <!-- Main Grid -->
+      <div class="dashboard-main">
+        ${buildChatPanel(s)}
+
+        <div class="intel-panel">
+          <!-- Live Intel Feed -->
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              ${sectionTitle('target','Live Intelligence Feed','')}
+              <span class="badge badge-green">● LIVE</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;">
+              ${INTELLIGENCE.map(e => `
+                <div class="intel-item${e.severity==='critical' ? ' critical' : ''}">
+                  ${makeBadge(e.type, e.severity==='critical' ? '#ef4444' : e.severity==='high' ? '#f59e0b' : '#0d9488')}
+                  <div style="flex:1;min-width:0;">
+                    <div class="intel-value">${e.value}</div>
+                    <div class="intel-meta">${e.session} · ${e.time}</div>
+                  </div>
+                  <div class="intel-conf">${e.confidence}%</div>
+                </div>`).join('')}
+            </div>
+          </div>
+
+          <!-- Report Card -->
+          <div class="card">
+            ${sectionTitle('alert','Report to Cybercrime','')}
+            <p style="font-size:12px;color:var(--s400);margin-bottom:12px;">File instant FIR with captured intelligence auto-filled</p>
+            <button class="report-card-btn" onclick="openComplaintModal(window.selectedSession||SESSIONS[0])">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                ${ICON.alert}
+              </svg>
+              File Cybercrime Complaint
+            </button>
+            <div class="portal-quick-grid">
+              ${CYBERCRIME_PORTALS.slice(0,4).map(p => `
+                <a href="${p.url}" target="_blank" class="portal-quick">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${ICON.net}</svg>
+                  <span>${p.name.split(' ').slice(0,2).join(' ')}</span>
+                </a>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function statCard(label, value, delta, color, glow, iconPath) {
+  const sign = delta.startsWith && delta.startsWith('+') ? '#22c55e' : delta.startsWith && delta.startsWith('-') ? '#ef4444' : '#22c55e';
+  return `
+    <div class="card stat-card${glow ? ' glow' : ''}">
+      <div class="stat-card-header">
+        <svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2">${iconPath||''}</svg>
+        <span class="stat-label">${label}</span>
+      </div>
+      <div class="stat-value" style="color:${color};">${value}</div>
+      ${delta ? `<div class="stat-delta" style="color:${sign};">${delta} from yesterday</div>` : ''}
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  SESSIONS PAGE
+// ════════════════════════════════════════════════════════════════════════
+function renderSessions() {
+  const active = SESSIONS.filter(s => s.status === 'active').length;
+  return `
+    <div class="flex-col">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <h2 style="font-size:18px;font-weight:800;color:var(--s100);margin:0;">Live Sessions</h2>
+          <p style="font-size:12px;color:var(--s400);margin:4px 0 0;">${active} active · ${SESSIONS.length} total today</p>
+        </div>
+        <span class="badge badge-green">● ${window.liveCount||4} Live</span>
+      </div>
+
+      <div class="grid-sessions">
+        ${SESSIONS.map(s => `
+          <div class="card session-card${window.selectedSession?.id === s.id ? ' selected' : ''}"
+               onclick="selectSession('${s.id}')">
+            <div class="session-card-header">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span class="pulse-dot ${s.status==='active' ? 'green' : 'slate'}"></span>
+                <div>
+                  <div class="session-id">${s.id}</div>
+                  <div class="session-num">${s.scammer}</div>
+                </div>
+              </div>
+              ${makeBadge(s.status, s.status==='active' ? '#22c55e' : '#64748b')}
+            </div>
+            <div class="session-badges">
+              ${makeBadge(s.type, '#f59e0b')}
+              ${makeBadge(s.city, '#3b82f6')}
+              ${makeBadge(s.model, '#8b5cf6')}
+            </div>
+            <div>
+              <div class="session-threat-row">
+                <span class="session-threat-label">Threat Score</span>
+                <span class="session-threat-label mono" style="color:${s.threat>=80?'#ef4444':'#f59e0b'};">${s.threat}/100</span>
+              </div>
+              ${makeThreatBar(s.threat)}
+            </div>
+            <div class="session-meta">
+              <span>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                ${s.duration}
+              </span>
+              <span>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${ICON.target}</svg>
+                ${s.entities} entities
+              </span>
+              <span>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${ICON.db}</svg>
+                ${s.cost}
+              </span>
+            </div>
+            <button class="report-btn" onclick="event.stopPropagation();openComplaintModal(SESSIONS.find(x=>x.id==='${s.id}'))">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${ICON.alert}</svg>
+              Report to Cybercrime
+            </button>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function selectSession(id) {
+  window.selectedSession = SESSIONS.find(s => s.id === id) || SESSIONS[0];
+  navigateTo('dashboard');
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  INTELLIGENCE PAGE
+// ════════════════════════════════════════════════════════════════════════
+function renderIntelligence() {
+  const intelItems = [
+    { label:'UPI IDs', count:412, color:'#0d9488' },
+    { label:'Phone Nos.', count:387, color:'#3b82f6' },
+    { label:'Bank Names', count:298, color:'#8b5cf6' },
+    { label:'URLs', count:201, color:'#ef4444' },
+    { label:'Telegram', count:167, color:'#f59e0b' },
+    { label:'Aadhaar (masked)', count:98, color:'#f97316' },
+  ];
+
+  return `
+    <div class="flex-col">
+      ${sectionTitle('target','Intelligence Database',`${(window.totalIntel||1842).toLocaleString()} entities extracted · Zero hallucination guaranteed`)}
+
+      <div class="grid-auto">
+        ${intelItems.map(item => `
+          <div class="card intel-mini">
+            <div class="intel-mini-count" style="color:${item.color};">${item.count}</div>
+            <div class="intel-mini-label">${item.label}</div>
+          </div>`).join('')}
+      </div>
+
+      <div class="card">
+        ${sectionTitle('eye','All Extracted Entities','')}
+        <div class="overflowx">
+          <table class="data-table">
+            <thead>
+              <tr>
+                ${['Type','Value','Confidence','Session','Time','Severity','Action'].map(h => `<th>${h}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${INTELLIGENCE.map((e,i) => `
+                <tr>
+                  <td>${makeBadge(e.type, PIE_COLORS[i%8])}</td>
+                  <td class="mono" style="color:var(--s200);">${e.value}</td>
+                  <td class="mono" style="color:${e.confidence>95?'#22c55e':'#f59e0b'};">${e.confidence}%</td>
+                  <td class="mono teal">${e.session}</td>
+                  <td style="color:var(--s400);">${e.time}</td>
+                  <td>${makeBadge(e.severity, e.severity==='critical'?'#ef4444':e.severity==='high'?'#f59e0b':'#0d9488')}</td>
+                  <td>
+                    <button onclick="openComplaintModal(SESSIONS[0])" style="background:rgba(239,68,68,.13);border:1px solid rgba(239,68,68,.27);border-radius:6px;color:#ef4444;cursor:pointer;font-size:10px;padding:2px 8px;display:inline-flex;align-items:center;gap:4px;">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${ICON.alert}</svg> Report
+                    </button>
+                  </td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  MEMORY PAGE
+// ════════════════════════════════════════════════════════════════════════
+function renderMemory() {
+  return `
+    <div class="flex-col">
+      ${sectionTitle('brain','Hindsight Memory Engine','PGVector + Redis persistent memory — learns from every scam')}
+      <div class="grid-2">
+        <div class="card">
+          ${sectionTitle('db','Learned Patterns','')}
+          ${MEMORY_PATTERNS.map((p,i) => `
+            <div class="pattern-row">
+              <span class="pattern-id" style="background:${PIE_COLORS[i%8]}22;color:${PIE_COLORS[i%8]};border:1px solid ${PIE_COLORS[i%8]}44;">${p.id}</span>
+              <div style="flex:1;">
+                <div class="pattern-name">${p.pattern}</div>
+                <div class="pattern-meta">${p.sessions} matches · ${p.lastSeen}</div>
+              </div>
+              <span class="pattern-conf">${p.confidence}%</span>
+              <div class="conf-bar">${makeThreatBar(p.confidence)}</div>
+            </div>`).join('')}
+        </div>
+
+        <div class="card">
+          ${sectionTitle('net','Semantic Similarity Search','')}
+          <p style="font-size:12px;color:var(--s400);margin-bottom:12px;">How Hindsight finds similar past scams in real-time</p>
+          <div class="embedding-box">
+            <div class="embed-label">Query embedding (current scammer message):</div>
+            <div class="embed-val">[0.234, -0.891, 0.567, 0.123, -0.445, 0.789, 0.312, -0.654, 0.901, ...]</div>
+          </div>
+          ${[
+            ['SESS-042: UPI fraud, verify@paytm', 0.94],
+            ['SESS-031: KYC scam, bank block threat', 0.89],
+            ['SESS-019: Police impersonation + fine', 0.82],
+          ].map(([label, score]) => `
+            <div class="similarity-row">
+              <span class="sim-label">${label}</span>
+              <span class="sim-score">${score}</span>
+              <div class="sim-bar"><div class="sim-fill" style="width:${score*100}%;"></div></div>
+            </div>`).join('')}
+          <div class="cache-info">
+            ✓ Retrieved in 23ms via PGVector cosine similarity<br/>
+            ✓ Boosted by shared entities: verify@paytm (+0.1)<br/>
+            ✓ Cached in Redis for next 60 minutes
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  ANALYTICS PAGE
+// ════════════════════════════════════════════════════════════════════════
+let analyticsTab = 'overview';
+
+function renderAnalytics() {
+  const tabs = ['overview','intelligence','models','geography','patterns'];
+  return `
+    <div class="flex-col">
+      <div class="tab-bar">
+        ${tabs.map(t => `
+          <button class="tab-btn${analyticsTab===t?' active':''}" onclick="setAnalyticsTab('${t}')">${t}</button>
+        `).join('')}
+      </div>
+      <div id="analyticsContent"></div>
+    </div>`;
+}
+
+function setAnalyticsTab(tab) {
+  analyticsTab = tab;
+  // Re-render just the tab bar active state
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent === tab);
+  });
+  renderAnalyticsContent();
+}
+
+function renderAnalyticsContent() {
+  const container = document.getElementById('analyticsContent');
+  if (!container) return;
+
+  if (analyticsTab === 'overview') {
+    container.innerHTML = `
+      <div class="flex-col">
+        <div class="grid-2">
+          <div class="card">
+            ${sectionTitle('trending','Sessions & Threats (7 days)','')}
+            <div class="chart-container" style="height:200px;"><canvas id="chartSessions"></canvas></div>
+          </div>
+          <div class="card">
+            ${sectionTitle('bar','Entities Extracted Daily','')}
+            <div class="chart-container" style="height:200px;"><canvas id="chartEntities"></canvas></div>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            ${sectionTitle('eye','Scam Types','')}
+            <div class="chart-container" style="height:180px;"><canvas id="chartPieScam"></canvas></div>
+          </div>
+          <div class="card">
+            ${sectionTitle('brain','AI Models Used','')}
+            <div class="chart-container" style="height:180px;"><canvas id="chartPieModel"></canvas></div>
+          </div>
+          <div class="card">
+            ${sectionTitle('alert','Threat Severity','')}
+            <div class="chart-container" style="height:180px;"><canvas id="chartPieSev"></canvas></div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            ${sectionTitle('net','Sara Performance Radar','vs baseline AI')}
+            <div class="chart-container" style="height:220px;"><canvas id="chartRadar"></canvas></div>
+          </div>
+          <div class="card">
+            ${sectionTitle('trending','Threat Score Timeline (SESS-003)','Real-time threat escalation')}
+            <div class="chart-container" style="height:220px;"><canvas id="chartTimeline"></canvas></div>
+          </div>
+        </div>
+      </div>`;
+    setTimeout(() => {
+      renderSessionsChart();
+      renderEntitiesChart();
+      renderPieChart('chartPieScam', SCAM_PIE);
+      renderPieChart('chartPieModel', MODEL_PIE);
+      renderPieChart('chartPieSev', SEVERITY_PIE);
+      renderRadarChart();
+      renderTimelineChart();
+    }, 50);
+
+  } else if (analyticsTab === 'intelligence') {
+    container.innerHTML = `
+      <div class="flex-col">
+        <div class="card">
+          ${sectionTitle('db','Intelligence Treemap — Entity Distribution','Size = count extracted')}
+          <div id="treemapContainer" style="height:350px;"></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            ${sectionTitle('target','Extraction Confidence Heatmap','')}
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              ${INTELLIGENCE.slice(0,8).map((e,i) => `
+                <div style="display:flex;align-items:center;gap:12px;">
+                  ${makeBadge(e.type, PIE_COLORS[i%8])}
+                  <div style="flex:1;height:6px;background:var(--s800);border-radius:3px;overflow:hidden;">
+                    <div style="height:100%;width:${e.confidence}%;background:${PIE_COLORS[i%8]};border-radius:3px;transition:width .5s;"></div>
+                  </div>
+                  <span class="mono s400" style="width:32px;font-size:11px;">${e.confidence}%</span>
+                </div>`).join('')}
+            </div>
+          </div>
+          <div class="card">
+            ${sectionTitle('clock','Extraction Speed by Method','')}
+            <div class="chart-container" style="height:200px;"><canvas id="chartSpeed"></canvas></div>
+          </div>
+        </div>
+      </div>`;
+    setTimeout(() => {
+      renderTreemap('treemapContainer');
+      renderSpeedChart();
+    }, 50);
+
+  } else if (analyticsTab === 'models') {
+    container.innerHTML = `
+      <div class="flex-col">
+        <div class="grid-2">
+          <div class="card">
+            ${sectionTitle('db','Cost per Session by Model','')}
+            <div class="chart-container" style="height:250px;"><canvas id="chartModelCost"></canvas></div>
+          </div>
+          <div class="card">
+            ${sectionTitle('trending','Model Latency Distribution','')}
+            <div class="chart-container" style="height:250px;"><canvas id="chartLatency"></canvas></div>
+          </div>
+        </div>
+        <div class="card">
+          ${sectionTitle('net','CascadeFlow Escalation Tree','Model selection routing visualization')}
+          <div class="cascade-tree">
+            <div class="cascade-node" style="background:rgba(13,148,136,.13);border:2px solid #0d9488;color:#0d9488;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:6px;">${ICON.db}</svg>
+              New Request
+            </div>
+            <div class="cascade-line"></div>
+            <div class="cascade-node" style="background:var(--s800);border:1px solid var(--s700);color:var(--s300);font-weight:500;font-size:12px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px;">${ICON.brain}</svg>
+              Local Processing (0ms, ₹0)
+            </div>
+            <div class="cascade-split">
+              <div class="cascade-split-branch">
+                <div class="cascade-line"></div>
+                <div class="cascade-leaf" style="background:rgba(34,197,94,.13);border:1px solid rgba(34,197,94,.27);color:#22c55e;">Quality ≥ 0.9 → Done</div>
+              </div>
+              <div class="cascade-split-branch">
+                <div class="cascade-line"></div>
+                <div class="cascade-leaf" style="background:rgba(245,158,11,.13);border:1px solid rgba(245,158,11,.27);color:#f59e0b;">Quality &lt; 0.9 → Escalate</div>
+              </div>
+            </div>
+            <div class="cascade-line"></div>
+            <div class="cascade-node" style="background:rgba(59,130,246,.13);border:1px solid rgba(59,130,246,.27);color:#3b82f6;font-size:12px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px;">${ICON.trending}</svg>
+              Groq Llama3 (180ms avg, ₹0.04/session)
+            </div>
+            <div class="cascade-split">
+              <div class="cascade-split-branch">
+                <div class="cascade-line"></div>
+                <div class="cascade-leaf" style="background:rgba(34,197,94,.13);border:1px solid rgba(34,197,94,.27);color:#22c55e;">Quality ≥ 0.82 → Done</div>
+              </div>
+              <div class="cascade-split-branch">
+                <div class="cascade-line"></div>
+                <div class="cascade-leaf" style="background:rgba(245,158,11,.13);border:1px solid rgba(245,158,11,.27);color:#f59e0b;">Quality &lt; 0.82 → Escalate</div>
+              </div>
+            </div>
+            <div class="cascade-line"></div>
+            <div class="cascade-node" style="background:rgba(139,92,246,.13);border:1px solid rgba(139,92,246,.27);color:#8b5cf6;font-size:12px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px;">${ICON.brain}</svg>
+              Claude 3.5 Sonnet (1.3s avg, ₹0.18/session)
+            </div>
+          </div>
+        </div>
+      </div>`;
+    setTimeout(() => { renderModelCostChart(); renderLatencyChart(); }, 50);
+
+  } else if (analyticsTab === 'geography') {
+    container.innerHTML = `
+      <div class="flex-col">
+        <div class="card">
+          ${sectionTitle('map','Scam Origins by City','Session volume heatmap')}
+          <div class="chart-container" style="height:280px;"><canvas id="chartCity"></canvas></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            ${sectionTitle('bar','Scam Type by Region','')}
+            <div class="chart-container" style="height:220px;"><canvas id="chartRegion"></canvas></div>
+          </div>
+          <div class="card">
+            ${sectionTitle('clock','Peak Scam Hours (IST)','')}
+            <div class="chart-container" style="height:220px;"><canvas id="chartPeak"></canvas></div>
+          </div>
+        </div>
+      </div>`;
+    setTimeout(() => { renderCityChart(); renderRegionChart(); renderPeakChart(); }, 50);
+
+  } else if (analyticsTab === 'patterns') {
+    container.innerHTML = `
+      <div class="flex-col">
+        <div class="card">
+          ${sectionTitle('brain','Hindsight Memory — Learned Patterns','PGVector similarity search results')}
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            ${MEMORY_PATTERNS.map((p,i) => `
+              <div style="display:flex;align-items:center;gap:12px;background:var(--s800);border-radius:8px;padding:12px 16px;border:1px solid var(--s700);">
+                <span style="background:${PIE_COLORS[i%8]}22;color:${PIE_COLORS[i%8]};border:1px solid ${PIE_COLORS[i%8]}44;border-radius:8px;padding:4px 10px;font-size:11px;font-family:monospace;flex-shrink:0;">${p.id}</span>
+                <div style="flex:1;">
+                  <div style="font-size:13px;font-weight:600;color:var(--s200);">${p.pattern}</div>
+                  <div style="font-size:11px;color:var(--s400);">${p.sessions} sessions matched · Last: ${p.lastSeen}</div>
+                </div>
+                <div style="text-align:right;flex-shrink:0;">
+                  <div style="font-size:14px;font-weight:700;color:#0d9488;font-family:monospace;">${p.confidence}%</div>
+                  <div style="font-size:10px;color:var(--s400);">confidence</div>
+                </div>
+                <div style="width:80px;">${makeThreatBar(p.confidence)}</div>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            ${sectionTitle('net','Pattern Co-occurrence','')}
+            <div class="chart-container" style="height:220px;"><canvas id="chartCooccurrence"></canvas></div>
+          </div>
+          <div class="card">
+            ${sectionTitle('trending','Pattern Detection Rate','')}
+            <div class="chart-container" style="height:220px;"><canvas id="chartPatternRate"></canvas></div>
+          </div>
+        </div>
+      </div>`;
+    setTimeout(() => { renderCooccurrenceChart(); renderPatternRateChart(); }, 50);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  CYBERCRIME PAGE
+// ════════════════════════════════════════════════════════════════════════
+function renderCybercrime() {
+  const portalColors = PIE_COLORS;
+  return `
+    <div class="flex-col">
+      ${sectionTitle('alert','Cybercrime Reporting Center','Direct integration with national law enforcement portals')}
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;">
+        ${CYBERCRIME_PORTALS.map((p,i) => `
+          <div class="card portal-card" style="border:1px solid ${portalColors[i]}33;">
+            <div class="portal-card-header">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="${portalColors[i]}" stroke-width="2">${ICON.shield}</svg>
+              <div>
+                <div class="portal-card-name">${p.name}</div>
+                <div class="portal-card-desc">${p.desc}</div>
+              </div>
+            </div>
+            <a href="${p.url}" target="_blank" rel="noopener" class="portal-visit"
+               style="background:${portalColors[i]}22;border-color:${portalColors[i]}44;color:${portalColors[i]};">
+              Visit Portal →
+            </a>
+          </div>`).join('')}
+      </div>
+
+      <div class="card">
+        ${sectionTitle('db','Quick Complaint — Auto-fill from Sara AI Session','')}
+        <p style="font-size:12px;color:var(--s400);margin-bottom:16px;">Select a session below to auto-fill all evidence captured by Sara AI</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;">
+          ${SESSIONS.map(s => `
+            <button class="session-report-btn" onclick="openComplaintModal(SESSIONS.find(x=>x.id==='${s.id}'))">
+              <div class="session-report-id">${s.id}</div>
+              <div class="session-report-type">${s.type}</div>
+              <div class="session-report-ent">${s.entities} entities captured</div>
+              <div class="session-report-cta">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:4px;">${ICON.alert}</svg>
+                File Complaint →
+              </div>
+            </button>`).join('')}
+        </div>
+      </div>
+
+      <div class="card">
+        ${sectionTitle('bar','Complaints Filed (Last 30 Days)','')}
+        <div class="chart-container" style="height:200px;"><canvas id="chartComplaints"></canvas></div>
+      </div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  SETTINGS PAGE
+// ════════════════════════════════════════════════════════════════════════
+function renderSettings() {
+  const sections = [
+    { title:'AI Model Config', fields:[
+      { label:'Primary Model',    value:'Groq Llama3 (Tier 2)',         type:'text' },
+      { label:'Fallback Model',   value:'Claude 3.5 Sonnet (Tier 4)',   type:'text' },
+      { label:'Monthly Budget (₹)',value:'5000',                        type:'number' },
+      { label:'Max Latency (ms)', value:'2000',                        type:'number' },
+    ]},
+    { title:'Sara Persona', fields:[
+      { label:"Sara's Name",    value:'Sara Sharma', type:'text' },
+      { label:'Age',            value:'47',          type:'number' },
+      { label:'City',           value:'Jaipur',      type:'text' },
+      { label:'Husband Name',   value:'Suresh ji',   type:'text' },
+    ]},
+    { title:'Safety Filters', fields:[
+      { label:'AI Reveal Protection',  value:'Triple-layer (Active)', type:'text' },
+      { label:'Injection Detection',   value:'Enabled',              type:'text' },
+      { label:'Abuse Threshold',       value:'85',                   type:'number' },
+      { label:'Auto-End Threat',       value:'90',                   type:'number' },
+    ]},
+    { title:'Webhook Config', fields:[
+      { label:'Webhook URL',     value:'https://your-server.com/webhook', type:'text' },
+      { label:'Secret Key',      value:'whsec_••••••••',                 type:'password' },
+      { label:'Events',          value:'session, intel, pattern',         type:'text' },
+      { label:'Retry Attempts',  value:'5',                              type:'number' },
+    ]},
+  ];
+
+  return `
+    <div class="flex-col">
+      ${sectionTitle('settings','Platform Settings','')}
+      <div class="grid-2">
+        ${sections.map(sec => `
+          <div class="card">
+            <div class="settings-card-title">${sec.title}</div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              ${sec.fields.map(f => `
+                <div class="settings-group">
+                  <label class="settings-label">${f.label}</label>
+                  <input type="${f.type}" value="${f.value}" />
+                </div>`).join('')}
+            </div>
+            <button class="settings-save" onclick="saveSetting(this)">Save Changes</button>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function saveSetting(btn) {
+  btn.textContent = 'Saved!';
+  btn.style.background = '#22c55e';
+  setTimeout(() => {
+    btn.textContent = 'Save Changes';
+    btn.style.background = '';
+  }, 1500);
+}
+
+// ===== APP.JS =====
+// ═══════════════════════════════════════════════════════════════════════
+//  SARA AI — App Router & Shell Logic
+// ═══════════════════════════════════════════════════════════════════════
+
+let currentPage = 'dashboard';
+let sidebarCollapsed = false;
+let liveCount = 4;
+let totalIntel = 1842;
+let selectedSession = SESSIONS[0];
+
+// Navigation
+function navigateTo(page) {
+  currentPage = page;
+  const content = document.getElementById('pageContent');
+  if (!content) return;
+
+  // Update nav active state
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.page === page);
+  });
+
+  // Update page title
+  const titleEl = document.getElementById('pageTitle');
+  if (titleEl) {
+    const iconMap = {
+      dashboard:    '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
+      sessions:     '<path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.5 9.93a19.79 19.79 0 01-3-8.59A2 2 0 013.48 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.91 8.91a16 16 0 006.29 6.29l1.28-1.28a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>',
+      intelligence: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+      memory:       '<path d="M12 2a10 10 0 0110 10c0 5.52-4.48 10-10 10S2 17.52 2 12"/><path d="M12 6v6l4 2"/>',
+      analytics:    '<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>',
+      cybercrime:   '<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+      settings:     '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>',
+    };
+    titleEl.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${iconMap[page] || ''}</svg> ${page}`;
+  }
+
+  // Render page content
+  switch (page) {
+    case 'dashboard':    content.innerHTML = renderDashboard(); break;
+    case 'sessions':     content.innerHTML = renderSessions(); break;
+    case 'intelligence': content.innerHTML = renderIntelligence(); break;
+    case 'memory':       content.innerHTML = renderMemory(); break;
+    case 'analytics':    content.innerHTML = renderAnalytics(); renderAnalyticsContent(); break;
+    case 'cybercrime':   content.innerHTML = renderCybercrime(); break;
+    case 'settings':     content.innerHTML = renderSettings(); break;
+    default:             content.innerHTML = renderDashboard();
+  }
+
+  // Post-render init
+  if (page === 'dashboard') {
+    renderChatMessages();
+    initChatListeners();
+  }
+}
+
+// Sidebar toggle
+function initSidebar() {
+  const toggle = document.getElementById('sidebarToggle');
+  const sidebar = document.getElementById('sidebar');
+  const logoText = document.getElementById('logoText');
+  const toggleIcon = document.getElementById('toggleIcon');
+
+  if (toggle) {
+    toggle.addEventListener('click', () => {
+      sidebarCollapsed = !sidebarCollapsed;
+      sidebar.classList.toggle('collapsed', sidebarCollapsed);
+      if (toggleIcon) {
+        toggleIcon.innerHTML = sidebarCollapsed
+          ? '<path d="M9 18l6-6-6-6"/>'
+          : '<path d="M15 18l-6-6 6-6"/>';
+      }
+    });
+  }
+
+  // Nav items
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', () => navigateTo(btn.dataset.page));
+  });
+}
+
+// Live counter simulation
+function startLiveSimulation() {
+  setInterval(() => {
+    liveCount = 3 + Math.floor(Math.random() * 4);
+    const el = document.getElementById('sidebarLiveCount');
+    if (el) el.textContent = `${liveCount} Active Sessions`;
+  }, 5000);
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  initSidebar();
+  initModalListeners();
+  navigateTo('dashboard');
+  startLiveSimulation();
+});
+
+</script>
+</body>
+</html>
