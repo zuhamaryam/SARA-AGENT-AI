@@ -225,39 +225,6 @@ The architecture is designed for future deployment with Twilio and Exotel.
 
 ---
 
-# Installation
-
-Clone the repository:
-
-```bash
-git clone <repository-url>
-```
-
-Install dependencies:
-
-```bash
-pnpm install
-```
-
-Run the development server:
-
-```bash
-pnpm dev
-```
-
-Build the project:
-
-```bash
-pnpm build
-```
-
-Start the production server:
-
-```bash
-pnpm start
-```
-
----
 
 # Environment Variables
 
@@ -298,21 +265,6 @@ The dashboard provides:
 * Voice Cloning Support
 * Multi-Agent Collaboration
 
----
-
-# Screenshots
-
-Include screenshots of:
-
-* Dashboard
-* Sara Conversation Interface
-* Runtime Logs
-* Memory Timeline
-* Threat Intelligence Panel
-* Voice Agent
-* System Architecture
-
----
 
 # License
 
@@ -326,9 +278,6 @@ This project is built using:
 
 * Hindsight
 * cascadeflow
-* OpenAI
-* React
-* Express
-* PostgreSQL
-* Drizzle ORM
+
+
 
