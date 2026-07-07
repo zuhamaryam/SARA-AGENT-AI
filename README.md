@@ -1,5 +1,5 @@
 # SARA-AGENT-AI
-A# SARA-AI-AGENT
+
 Sara AI is an intelligent scam honeypot designed to engage scammers in realistic conversations, extract threat intelligence, and provide security teams with actionable insights. Instead of immediately blocking suspicious actors, Sara behaves like a genuine user, allowing the system to collect valuable information such as phone numbers, UPI IDs, bank details, phishing links, and scam patterns.
 
 The project combines conversational AI with agent memory and runtime intelligence to improve response quality, reduce hallucinations, and optimize model selection.
@@ -56,57 +56,7 @@ Dashboard & Webhook
 
 ---
 
-# Technology Stack
 
-## Frontend
-
-* React
-* TypeScript
-* Tailwind CSS
-* Vite
-
-## Backend
-
-* Node.js
-* Express
-* TypeScript
-
-## Database
-
-* PostgreSQL
-* Drizzle ORM
-
-## AI Technologies
-
-* OpenAI
-* Hindsight
-* cascadeflow
-
-## Voice Integration
-
-* Speech-to-Text
-* Text-to-Speech
-* Twilio (Ready)
-* Exotel (Ready)
-
----
-
-# Project Structure
-
-```
-project/
-
-├── api-server/
-├── frontend/
-├── packages/
-├── shared/
-├── docs/
-├── package.json
-├── pnpm-workspace.yaml
-└── README.md
-```
-
----
 
 # System Workflow
 
@@ -211,36 +161,8 @@ Caller
 
 The architecture is designed for future deployment with Twilio and Exotel.
 
----
-
-# API Endpoints
-
-| Method | Endpoint            | Description                       |
-| ------ | ------------------- | --------------------------------- |
-| GET    | /health             | Health check                      |
-| POST   | /api/detect         | Detect scam and generate response |
-| GET    | /api/session/:id    | Retrieve session                  |
-| GET    | /api/runtime        | Runtime logs                      |
-| POST   | /api/manual-end/:id | End session manually              |
-
----
 
 
-# Environment Variables
-
-```
-OPENAI_API_KEY=
-
-DATABASE_URL=
-
-HINDSIGHT_API_KEY=
-
-CASCADEFLOW_API_KEY=
-
-JWT_SECRET=
-```
-
----
 
 # Dashboard
 
@@ -266,18 +188,7 @@ The dashboard provides:
 * Multi-Agent Collaboration
 
 
-# License
 
-This project is licensed under the MIT License.
-
----
-
-# Acknowledgements
-
-This project is built using:
-
-* Hindsight
-* cascadeflow
 
 
 
