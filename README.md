@@ -71,50 +71,7 @@ Dashboard & Webhook
 9. Store updated conversation memory.
 10. Display runtime analytics.
 
----
 
-# Hindsight Integration
-
-Hindsight enables persistent memory across conversations.
-
-Capabilities include:
-
-* Conversation storage
-* Memory retrieval
-* Context-aware prompting
-* Long-term scam pattern recognition
-* Reduced hallucinations
-
----
-
-# cascadeflow Integration
-
-cascadeflow provides runtime intelligence by routing requests to the most appropriate model.
-
-Routing examples:
-
-```
-Greeting
-    ↓
-Small Model
-
-Scam Analysis
-    ↓
-Reasoning Model
-
-Information Extraction
-    ↓
-Structured Output Model
-```
-
-Benefits include:
-
-* Reduced latency
-* Lower inference cost
-* Better runtime visibility
-* Efficient model utilization
-
----
 
 # Threat Intelligence Extraction
 
@@ -129,19 +86,7 @@ Sara automatically extracts:
 * Scam Category
 * Risk Score
 
----
 
-# Runtime Monitoring
-
-Each request records:
-
-* Selected Model
-* Routing Decision
-* Response Time
-* Token Usage
-* Estimated Cost
-
----
 
 # Voice Agent
 
